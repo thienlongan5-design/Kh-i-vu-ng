@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Voxel Craft</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #87CEEB; touch-action: none; font-family: sans-serif; user-select: none; }
+        canvas { display: block; width: 100vw; height: 100vh; }
+        
+        /* UI Huds */
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; }
+        #crosshair::before, #crosshair::after { content: ''; position: absolute; background: rgba(255,255,255,0.8); }
+        #crosshair::before { top: 9px; left: 0; width: 20px; height: 2px; }
+        #crosshair::after { top: 0; left: 9px; width: 2px; height: 20px; }
+        
+        /* Thanh công cụ (Hotbar) */
+        #hotbar { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; background: rgba(0,0,0,0.5); padding: 4px; border-radius: 4px; pointer-events: auto; }
+        .slot { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid #555; border-radius: 4px; display: flex; justify-content: center; align-items: center; }
+        .slot.active { border-color: white; box-shadow: 0 0 10px white; }
+        
+        /* Trạng thái (Máu/Thức ăn) */
+        #status-bars { position: absolute; bottom: 65px; left: 50%; transform: translateX(-50%); width: 380px; display: flex; justify-content: space-between; }
+        .bar-container { display: flex; gap: 2px; }
+        .heart, .food { width: 15px; height: 15px; background-size: cover; }
+        .heart { background-color: red; clip-path: polygon(50% 100%, 0 50%, 0 0, 50% 20%, 100% 0, 100% 50%); }
+        .food { background-color: #8B4513; border-radius: 50%; }
+
+        /* Điều khiển Mobile */
+        #joystick-zone { position: absolute; bottom: 20px; left: 20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; pointer-events: auto; }
+        #joystick-knob { position: absolute; top: 35px; left: 35px; width: 50px; height: 50px; background: rgba(255,255,255,0.4); border-radius: 50%; }
+        #action-btn { position: absolute; bottom: 40px; right: 40px; width: 60px; height: 60px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 50%; pointer-events: auto; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="ui-layer">
+    <div id="crosshair"></div>
+    <div id="status-bars">
+        <div class="bar-container" id="health-bar"></div>
+        <div class="bar-container" id="food-bar"></div>
+    </div>
+    <div id="hotbar"></div>
+    <div id="joystick-zone"><div id="joystick-knob"></div></div>
+    <div id="action-btn">Làm</div>
+</div>
+
+<!-- Three.js (Thư viện 3D siêu nhẹ cho Web) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// --- 1. HỆ THỐNG TEXURE BẰNG CODE (Tối ưu RAM cho A20) ---
+function generateTexture(type) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 16; canvas.height = 16;
+    const ctx = canvas.getContext('2d');
+    
+    // Màu cơ bản theo loại khối
+    let colors = [];
+    if(type === 'grass_top') colors = ['#41980a', '#53b516'];
+    else if(type === 'grass_side') colors = ['#694629', '#41980a']; // Đất + cỏ
+    else if(type === 'dirt') colors = ['#694629', '#57381d'];
+    else if(type === 'stone') colors = ['#7d7d7d', '#696969'];
+    else if(type === 'cobblestone') colors = ['#5e5e5e', '#404040', '#7d7d7d'];
+    else if(type === 'wood') colors = ['#5c4026', '#3b2613'];
+    else if(type === 'leaves') colors = ['#1d5c14', '#15400e', 'transparent'];
+    else if(type === 'planks') colors = ['#9e7a4b', '#82623a'];
+    else if(type === 'sand') colors = ['#dcd28c', '#cfc476'];
+    else colors = ['#ff00ff', '#000000']; // Lỗi texture
+
+    // Vẽ pixel noise
+    for(let x=0; x<16; x++) {
+        for(let y=0; y<16; y++) {
+            if(type === 'grass_side' && y < 12) {
+                ctx.fillStyle = (Math.random()>0.5)? '#694629' : '#57381d'; // Đất
+            } else if(type === 'grass_side' && y >= 12) {
+                ctx.fillStyle = (Math.random()>0.5)? '#41980a' : '#53b516'; // Cỏ
+            } else {
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+            }
+            ctx.fillRect(x, y, 1, 1);
+        }
+    }
+    
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.magFilter = THREE.NearestFilter; // Phong cách pixel Minecraft
+    return tex;
+}
+
+// Khởi tạo Textures
+const textures = {
+    grass: [generateTexture('grass_side'), generateTexture('grass_side'), generateTexture('grass_top'), generateTexture('dirt'), generateTexture('grass_side'), generateTexture('grass_side')],
+    dirt: Array(6).fill(generateTexture('dirt')),
+    stone: Array(6).fill(generateTexture('stone')),
+    wood: Array(6).fill(generateTexture('wood')),
+    leaves: Array(6).fill(generateTexture('leaves')),
+    planks: Array(6).fill(generateTexture('planks')),
+    sand: Array(6).fill(generateTexture('sand'))
+};
+
+const materials = {};
+for (let key in textures) {
+    materials[key] = textures[key].map(tex => new THREE.MeshLambertMaterial({ map: tex }));
+}
+
+// --- 2. HỆ THỐNG NOISE (Giả lập Simplex cực nhẹ) ---
+const Noise = {
+    seed: Math.random(),
+    hash: function(x, y) {
+        let h = this.seed + x * 374761393 + y * 668265263;
+        h = (h ^ (h >> 13)) * 1274126177;
+        return h ^ (h >> 16);
+    },
+    get: function(x, y) {
+        return (this.hash(Math.floor(x), Math.floor(y)) % 100) / 100;
+    },
+    smooth: function(x, y) {
+        const x0 = Math.floor(x), y0 = Math.floor(y);
+        const dx = x - x0, dy = y - y0;
+        const v1 = this.get(x0, y0), v2 = this.get(x0 + 1, y0);
+        const v3 = this.get(x0, y0 + 1), v4 = this.get(x0 + 1, y0 + 1);
+        const i1 = v1 * (1 - dx) + v2 * dx;
+        const i2 = v3 * (1 - dx) + v4 * dx;
+        return i1 * (1 - dy) + i2 * dy;
+    }
+};
+
+// --- 3. HỆ THỐNG ENGINE & ĐỒ HỌA ---
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87CEEB);
+scene.fog = new THREE.Fog(0x87CEEB, 20, 50);
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+const renderer = new THREE.WebGLRenderer({ antialias: false }); // Tắt AA để mượt trên A20
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// Chu kỳ Ngày/Đêm & Ánh sáng
+const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+scene.add(sunLight);
+const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+scene.add(ambientLight);
+
+// --- 4. HỆ THỐNG CHUNK & ĐỊA HÌNH ---
+const chunkSize = 16;
+const chunkHeight = 32;
+const voxelSize = 1;
+const chunks = new Map();
+const blockGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize);
+
+function getChunkKey(cx, cz) { return `${cx},${cz}`; }
+
+function generateChunk(cx, cz) {
+    const chunkKey = getChunkKey(cx, cz);
+    if (chunks.has(chunkKey)) return;
+
+    const chunkGroup = new THREE.Group();
+    const blocksData = {}; 
+
+    for (let x = 0; x < chunkSize; x++) {
+        for (let z = 0; z < chunkSize; z++) {
+            const worldX = cx * chunkSize + x;
+            const worldZ = cz * chunkSize + z;
+            
+            // Tạo độ cao địa hình
+            let h = Math.floor(Noise.smooth(worldX * 0.05, worldZ * 0.05) * 10) + 10;
+            
+            for (let y = 0; y <= h; y++) {
+                let type = 'stone';
+                if (y === h) type = 'grass';
+                else if (y > h - 3) type = 'dirt';
+
+                const block = new THREE.Mesh(blockGeometry, materials[type]);
+                block.position.set(worldX, y, worldZ);
+                chunkGroup.add(block);
+                blocksData[`${worldX},${y},${worldZ}`] = { type, mesh: block };
+            }
+            
+            // Sinh cây ngẫu nhiên (1%)
+            if(Math.random() < 0.01 && h >= 10) {
+                generateTree(worldX, h + 1, worldZ, chunkGroup, blocksData);
+            }
+        }
+    }
+    
+    scene.add(chunkGroup);
+    chunks.set(chunkKey, { group: chunkGroup, data: blocksData });
+}
+
+function generateTree(x, y, z, group, data) {
+    // Thân cây
+    for(let i=0; i<4; i++) {
+        let b = new THREE.Mesh(blockGeometry, materials['wood']);
+        b.position.set(x, y+i, z);
+        group.add(b);
+        data[`${x},${y+i},${z}`] = { type: 'wood', mesh: b };
+    }
+    // Lá
+    for(let lx = -2; lx <= 2; lx++) {
+        for(let lz = -2; lz <= 2; lz++) {
+            for(let ly = 3; ly <= 5; ly++) {
+                if(Math.abs(lx) === 2 && Math.abs(lz) === 2 && ly === 5) continue;
+                let b = new THREE.Mesh(blockGeometry, materials['leaves']);
+                b.position.set(x+lx, y+ly, z+lz);
+                group.add(b);
+                data[`${x+lx},${y+ly},${z+lz}`] = { type: 'leaves', mesh: b };
+            }
+        }
+    }
+}
+
+// Sinh 9 chunks xung quanh người chơi
+for(let x=-1; x<=1; x++) {
+    for(let z=-1; z<=1; z++) {
+        generateChunk(x, z);
+    }
+}
+
+// --- 5. NGƯỜI CHƠI & VẬT LÝ ---
+const player = {
+    velocity: new THREE.Vector3(),
+    direction: new THREE.Vector3(),
+    speed: 5,
+    jumpForce: 8,
+    gravity: 20,
+    canJump: false
+};
+camera.position.set(8, 25, 8); // Spawn point
+
+// --- 6. HỆ THỐNG ĐIỀU KHIỂN & TƯƠNG TÁC (Tối ưu Mobile Touch) ---
+let touchData = {
+    moveLeft: false, moveRight: false, moveForward: false, moveBackward: false,
+    lookX: 0, lookY: 0, isDragging: false, lastX: 0, lastY: 0
+};
+
+// Joystick
+const joyZone = document.getElementById('joystick-zone');
+const joyKnob = document.getElementById('joystick-knob');
+let joyActive = false;
+
+joyZone.addEventListener('touchstart', (e) => { joyActive = true; handleJoy(e); }, {passive: false});
+joyZone.addEventListener('touchmove', (e) => { e.preventDefault(); handleJoy(e); }, {passive: false});
+joyZone.addEventListener('touchend', () => { 
+    joyActive = false; joyKnob.style.transform = `translate(0px, 0px)`;
+    touchData.moveForward = touchData.moveBackward = touchData.moveLeft = touchData.moveRight = false;
+});
+
+function handleJoy(e) {
+    if(!joyActive) return;
+    const rect = joyZone.getBoundingClientRect();
+    const touch = e.touches[0];
+    let x = touch.clientX - rect.left - 60;
+    let y = touch.clientY - rect.top - 60;
+    const distance = Math.sqrt(x*x + y*y);
+    if(distance > 30) { x = (x/distance)*30; y = (y/distance)*30; }
+    joyKnob.style.transform = `translate(${x}px, ${y}px)`;
+    
+    touchData.moveForward = y < -10;
+    touchData.moveBackward = y > 10;
+    touchData.moveLeft = x < -10;
+    touchData.moveRight = x > 10;
+}
+
+// Xoay Camera
+document.addEventListener('touchstart', (e) => {
+    if(e.target.id === 'ui-layer' || e.target.tagName === 'CANVAS') {
+        touchData.isDragging = true;
+        touchData.lastX = e.touches[0].clientX;
+        touchData.lastY = e.touches[0].clientY;
+    }
+});
+document.addEventListener('touchmove', (e) => {
+    if(touchData.isDragging) {
+        const dx = e.touches[0].clientX - touchData.lastX;
+        const dy = e.touches[0].clientY - touchData.lastY;
+        touchData.lookX -= dx * 0.005;
+        touchData.lookY -= dy * 0.005;
+        touchData.lookY = Math.max(-Math.PI/2, Math.min(Math.PI/2, touchData.lookY)); // Khóa góc nhìn lên xuống
+        
+        camera.rotation.y = touchData.lookX;
+        camera.rotation.x = touchData.lookY;
+        camera.rotation.order = 'YXZ'; // Tránh gimbal lock
+        
+        touchData.lastX = e.touches[0].clientX;
+        touchData.lastY = e.touches[0].clientY;
+    }
+});
+document.addEventListener('touchend', () => touchData.isDragging = false);
+
+// Nút tương tác (Đập khối / Nhảy)
+document.getElementById('action-btn').addEventListener('touchstart', () => {
+    if(player.canJump) { player.velocity.y = player.jumpForce; player.canJump = false; }
+    else breakBlock(); // Đập khối nếu đang lơ lửng hoặc kết hợp
+});
+
+const raycaster = new THREE.Raycaster();
+function breakBlock() {
+    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+    if(intersects.length > 0 && intersects[0].distance < 5) {
+        const object = intersects[0].object;
+        if(object.geometry === blockGeometry) {
+            object.parent.remove(object);
+            // Cập nhật blocksData nội bộ sẽ cần logic thêm ở bản đầy đủ
+        }
+    }
+}
+
+// --- 7. UI: MÁU, THỨC ĂN, KHO ĐỒ ---
+const healthBar = document.getElementById('health-bar');
+const foodBar = document.getElementById('food-bar');
+const hotbar = document.getElementById('hotbar');
+
+for(let i=0; i<10; i++) healthBar.innerHTML += '<div class="heart"></div>';
+for(let i=0; i<10; i++) foodBar.innerHTML += '<div class="food"></div>';
+
+const items = ['grass', 'dirt', 'stone', 'wood', 'planks', 'sand'];
+let currentSlot = 0;
+items.forEach((item, index) => {
+    const slot = document.createElement('div');
+    slot.className = `slot ${index === 0 ? 'active' : ''}`;
+    // Render icon đơn giản (Trong thực tế dùng ảnh texture)
+    slot.style.backgroundColor = materials[item][0].color ? materials[item][0].color.getStyle() : '#555';
+    slot.onclick = () => {
+        document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
+        slot.classList.add('active');
+        currentSlot = index;
+    };
+    hotbar.appendChild(slot);
+});
+
+
+// --- 8. VÒNG LẶP GAME CHÍNH (Loop) ---
+let clock = new THREE.Clock();
+let timeOfDay = 0;
+
+function animate() {
+    requestAnimationFrame(animate);
+    const delta = Math.min(clock.getDelta(), 0.1); // Chống kẹt khung hình
+    
+    // --- Ngày và Đêm ---
+    timeOfDay += delta * 0.1;
+    sunLight.position.x = Math.cos(timeOfDay) * 50;
+    sunLight.position.y = Math.sin(timeOfDay) * 50;
+    sunLight.position.z = Math.cos(timeOfDay) * 50;
+    
+    if(sunLight.position.y < 0) {
+        scene.background.setHex(0x050510); // Đêm
+        sunLight.intensity = 0;
+    } else {
+        scene.background.setHex(0x87CEEB); // Ngày
+        sunLight.intensity = Math.min(sunLight.position.y / 10, 1);
+    }
+
+    // --- Di chuyển & Vật lý cơ bản ---
+    player.velocity.x -= player.velocity.x * 10.0 * delta;
+    player.velocity.z -= player.velocity.z * 10.0 * delta;
+    player.velocity.y -= player.gravity * delta; // Trọng lực
+
+    player.direction.z = Number(touchData.moveForward) - Number(touchData.moveBackward);
+    player.direction.x = Number(touchData.moveRight) - Number(touchData.moveLeft);
+    player.direction.normalize();
+
+    if (touchData.moveForward || touchData.moveBackward) player.velocity.z -= player.direction.z * 40.0 * delta;
+    if (touchData.moveLeft || touchData.moveRight) player.velocity.x -= player.direction.x * 40.0 * delta;
+
+    // Giả lập va chạm đất đơn giản (Sàn cứng y=15 tạm thời để chạy)
+    // *Trong bản Full: Kiểm tra AABB với mảng blocksData*
+    const floorY = 15; 
+    if (camera.position.y < floorY) {
+        player.velocity.y = 0;
+        camera.position.y = floorY;
+        player.canJump = true;
+    }
+
+    camera.translateX(player.velocity.x * delta);
+    camera.translateZ(player.velocity.z * delta);
+    camera.position.y += player.velocity.y * delta;
+
+    renderer.render(scene, camera);
+}
+
+// Khởi chạy khi load xong
+window.onload = () => {
+    animate();
+};
+
+// Cập nhật lại kích thước khi xoay màn hình
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+</script>
+</body>
+</html>
+
