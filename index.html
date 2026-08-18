@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Kiếm Tiền Pro - Phiên Bản Nâng Cấp</title>
+    <title>App Kiếm Tiền Pro - Enterprise Security</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -33,17 +33,15 @@
         .btn-success { background: #10b981; } 
         
         .card { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--border-color); }
-        .admin-name { color: #ef4444 !important; text-shadow: 0 0 8px rgba(239, 68, 68, 0.4); font-weight: bold; text-transform: uppercase; }
+        .admin-name { color: #ef4444 !important; font-weight: bold; text-transform: uppercase; }
         
-        /* THANH ĐIỀU HƯỚNG BOTTOM NAV */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.3); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 100; }
         .nav-item { color: #94a3b8; text-align: center; cursor: pointer; font-size: 11px; flex: 1; transition: 0.2s; }
         .nav-item.active { color: #38bdf8; font-weight: bold; transform: translateY(-2px); }
         
         .msg-box, .history-item { background: var(--bg-color); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #38bdf8; font-size: 13px; }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         
-        /* MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--card-bg); padding: 20px; border-radius: 12px; width: 85%; max-width: 350px; text-align: center; border: 1px solid var(--border-color); }
         
@@ -53,21 +51,24 @@
 </head>
 <body>
 
+    <!-- MÀN HÌNH BẢO TRÌ -->
     <div id="maintenanceScreen" class="hidden">
         <h1 style="color:#ef4444;">🚧 HỆ THỐNG ĐANG BẢO TRÌ</h1>
-        <p>Hệ thống đang được Admin tối ưu hóa. Vui lòng quay lại sau ít phút!</p>
+        <p>Hệ thống đang được Admin nâng cấp an toàn. Vui lòng quay lại sau!</p>
     </div>
 
+    <!-- MÀN HÌNH ĐĂNG NHẬP -->
     <div id="loginScreen" class="container" style="margin-top: 50px;">
         <h2>Đăng Nhập Hệ Thống</h2>
         <div class="card">
-            <input type="email" id="email" placeholder="Nhập email của bạn...">
+            <input type="email" id="email" placeholder="Nhập email...">
             <input type="password" id="pass" placeholder="Nhập mật khẩu...">
             <button id="btnLogin">Đăng Nhập Ngay</button>
             <p id="loginError" style="color: #ef4444; font-size: 13px; text-align: center; margin-top: 10px;"></p>
         </div>
     </div>
 
+    <!-- GIAO DIỆN CHÍNH -->
     <div id="mainApp" class="hidden">
         <div class="container" style="padding-bottom: 5px;">
             <div class="top-bar">
@@ -76,19 +77,28 @@
             </div>
         </div>
         
+        <!-- TRANG CHỦ -->
         <div id="tabHome" class="container tab-content">
             <div class="card">
                 <p>Vai trò: <span id="uiRole">...</span></p>
                 <p>Số dư ví: <strong style="color:#10b981; font-size:22px;" id="uiBalance">0</strong> VNĐ</p>
                 <div style="background: var(--bg-color); padding: 10px; border-radius: 6px; font-size: 12px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                    <span>Mã giới thiệu: <b id="uiRefCode" style="color:#38bdf8;">...</b></span>
+                    <span>Mã giới thiệu của bạn: <b id="uiRefCode" style="color:#38bdf8;">...</b></span>
                     <button onclick="copyRef()" style="width: auto; padding: 5px 10px; font-size: 11px;">📋 Sao chép</button>
                 </div>
+            </div>
+
+            <!-- Ô NHẬP MÃ GIỚI THIỆU -->
+            <div class="card" id="refSystem">
+                <h3>Nhập Mã Giới Thiệu</h3>
+                <p style="font-size: 12px; color: #94a3b8; text-align: center;">Nhập mã bạn bè nhận 5.000đ. Người mời sẽ nhận 25% hoa hồng thụ động!</p>
+                <input type="text" id="inputRefCode" placeholder="Nhập mã giới thiệu...">
+                <button onclick="applyReferralCode()" class="btn-success">Xác Nhận Nhận 5k</button>
             </div>
             
             <div class="card">
                 <h3>Xem Quảng Cáo Nhận Thưởng</h3>
-                <p style="font-size: 12px; color: #94a3b8; text-align: center;">Tích lũy số dư nhanh chóng với quảng cáo chất lượng cao (Nhận 60% giá trị).</p>
+                <p style="font-size: 12px; color: #94a3b8; text-align: center;">Tích lũy số dư (Nhận 60% thưởng trực tiếp).</p>
                 <button id="btnWatchAd" class="btn-warning">📺 Xem Quảng Cáo Ngay</button>
                 <div id="adStatus" style="margin-top:10px; color:#10b981; font-size:13px; text-align:center; font-weight:bold;"></div>
                 <div id="hiddenAdContainer"></div> 
@@ -109,4 +119,486 @@
             <button id="btnLogout" class="btn-danger" style="margin-top:5px; margin-bottom: 20px;">Đăng Xuất Tài Khoản</button>
         </div>
 
-        
+        <!-- HỘP THƯ -->
+        <div id="tabInbox" class="container tab-content hidden">
+            <h2>Hộp Thư Thông Báo</h2>
+            <div id="inboxList" style="margin-top: 15px;">
+                <p style="color: #94a3b8; text-align:center;">Đang tải hộp thư...</p>
+            </div>
+        </div>
+
+        <!-- LỊCH SỬ GIAO DỊCH -->
+        <div id="tabHistory" class="container tab-content hidden">
+            <h2>Lịch Sử Giao Dịch</h2>
+            <div id="historyList" style="margin-top: 15px;">
+                <p style="color: #94a3b8; text-align:center;">Chưa có lịch sử giao dịch.</p>
+            </div>
+        </div>
+
+        <!-- GÓP Ý -->
+        <div id="tabFeedback" class="container tab-content hidden">
+            <h2>Góp Ý Hệ Thống</h2>
+            <div class="card" style="margin-top: 15px;">
+                <textarea id="feedbackContent" rows="4" placeholder="Nhập ý kiến đóng góp..."></textarea>
+                <button onclick="sendFeedback()" class="btn-success">Gửi Góp Ý</button>
+            </div>
+        </div>
+
+        <!-- BẢNG ĐIỀU KHIỂN ADMIN -->
+        <div id="tabAdmin" class="container tab-content hidden">
+            <h2 class="admin-name">Cơ Sở Chỉ Huy Admin</h2>
+            
+            <div class="card">
+                <h3>1. Gửi Thông Báo Toàn Cầu</h3>
+                <input type="text" id="adminGlobalTitle" placeholder="Tiêu đề...">
+                <input type="text" id="adminGlobalMsg" placeholder="Nội dung...">
+                <button onclick="adminExecute('globalMsg')">Gửi Đến Tất Cả User</button>
+            </div>
+
+            <div class="card">
+                <h3>2 & 3. Quản Lý Số Dư User</h3>
+                <input type="text" id="adminTargetUid" placeholder="Nhập UID người dùng...">
+                <input type="number" id="adminMoneyAmount" placeholder="Số tiền cộng/trừ (+ hoặc -)...">
+                <button onclick="adminExecute('addMoney')" class="btn-warning">Cập Nhật Số Dư</button>
+            </div>
+
+            <div class="card">
+                <h3>4 & 5. Vận Hành Hệ Thống</h3>
+                <button onclick="adminExecute('enableMaint')" class="btn-danger">🔒 Bật Chế Độ Bảo Trì</button>
+                <button onclick="adminExecute('disableMaint')" class="btn-success" style="margin-top:8px;">🔓 Tắt Chế Độ Bảo Trì</button>
+            </div>
+
+            <div class="card">
+                <h3>6 & 7. Kiểm Tra & Thống Kê</h3>
+                <button onclick="adminExecute('checkUser')" class="btn-warning">🔍 Tra Cứu Thông Tin User</button>
+                <button onclick="adminExecute('showStats')" style="margin-top:8px;" class="btn-success">📊 Thống Kê Hệ Thống</button>
+            </div>
+
+            <!-- BẢNG KẾ TOÁN CHI TRẢ -->
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>📋 Bảng Kế Toán - Danh Sách Cần Chi Trả</h3>
+                <p style="font-size: 12px; color: #94a3b8; text-align: center;">Danh sách tài khoản có số dư kèm số tiền thực nhận (-2% phí).</p>
+                <button onclick="renderPaymentTable()" class="btn-success">🔄 Cập Nhật Danh Sách</button>
+                <div style="overflow-x: auto; margin-top: 10px;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color); color: #38bdf8;">
+                                <th style="padding: 8px;">Tên / Email</th>
+                                <th style="padding: 8px;">Ngân Hàng</th>
+                                <th style="padding: 8px;">Số Dư</th>
+                                <th style="padding: 8px;">Thực Trả (-2%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentTableBody">
+                            <tr><td colspan="4" style="text-align: center; padding: 10px; color: #94a3b8;">Bấm nút để tải dữ liệu...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('tabHome', this)">🏠 Trang Chủ</div>
+            <div class="nav-item" onclick="switchTab('tabInbox', this)">✉️ Hộp Thư</div>
+            <div class="nav-item" onclick="switchTab('tabHistory', this)">📜 Lịch Sử</div>
+            <div class="nav-item" onclick="switchTab('tabFeedback', this)">💡 Góp Ý</div>
+            <div class="nav-item hidden admin-name" id="navAdmin" onclick="switchTab('tabAdmin', this)">⚙️ Admin</div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN AN TOÀN 3S -->
+    <div id="confirmModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 style="color:#f59e0b;">XÁC NHẬN HÀNH ĐỘNG</h3>
+            <p id="confirmText" style="font-size:14px; margin: 15px 0;">Bạn có chắc chắn thực hiện?</p>
+            <button id="btnConfirmAction" class="btn-danger" disabled>Xác nhận (3s)</button>
+            <button onclick="closeConfirmModal()" style="background:#475569; margin-top:8px;">Hủy bỏ</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE & LOGIC NÂNG CẤP BẢO MẬT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+        import { getDatabase, ref, get, set, update, push, onValue, runTransaction, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
+
+        const firebaseConfig = { 
+            apiKey: "AIzaSyC-9H_vpLYNh2xfwXmyHf6bmNubyAr6vjQ", authDomain: "wed-26856.firebaseapp.com", databaseURL: "https://wed-26856-default-rtdb.firebaseio.com", projectId: "wed-26856", storageBucket: "wed-26856.firebasestorage.app", messagingSenderId: "1044067507339", appId: "1:1044067507339:web:6c21fd80d16b1ccad4488e" 
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        let currentUserData = null;
+        let actionCallback = null;
+        let isWatchingAd = false; // Anti-cheat Session Lock
+
+        window.toggleTheme = () => document.body.classList.toggle("light-mode");
+
+        // ĐĂNG NHẬP SẠCH DỮ LIỆU
+        document.getElementById("btnLogin").addEventListener("click", async () => {
+            const email = document.getElementById("email").value.trim();
+            const pass = document.getElementById("pass").value.trim();
+            if(!email || !pass) return document.getElementById("loginError").innerText = "Nhập đầy đủ email và mật khẩu!";
+            document.getElementById("btnLogin").innerText = "Đang xác thực...";
+            try { await signInWithEmailAndPassword(auth, email, pass); } 
+            catch (e) { document.getElementById("loginError").innerText = "Sai tài khoản hoặc mật khẩu!"; document.getElementById("btnLogin").innerText = "Đăng Nhập Ngay"; }
+        });
+        document.getElementById("btnLogout").addEventListener("click", () => signOut(auth));
+
+        // BẢO TRÌ REALTIME
+        onValue(ref(db, 'systemConfig/maintenance'), (snap) => {
+            if (snap.val() === true) document.getElementById("maintenanceScreen").classList.remove("hidden");
+            else document.getElementById("maintenanceScreen").classList.add("hidden");
+        });
+
+        // GIÁM SÁT REALTIME VÀ TỐI ƯU HÓA TỐC ĐỘ ĐỌC
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById("loginScreen").classList.add("hidden");
+                document.getElementById("mainApp").classList.remove("hidden");
+                
+                // Lắng nghe biến động số dư Realtime an toàn
+                onValue(ref(db, 'users/' + user.uid), (snap) => {
+                    if(snap.exists()){
+                        currentUserData = snap.val();
+                        document.getElementById("uiName").innerText = currentUserData.username || "Thành viên";
+                        document.getElementById("uiBalance").innerText = (currentUserData.balance || 0).toLocaleString();
+                        document.getElementById("uiRole").innerText = currentUserData.role || "User";
+                        
+                        let refCode = currentUserData.refCode || "REF" + user.uid.substring(0, 5).toUpperCase();
+                        document.getElementById("uiRefCode").innerText = refCode;
+
+                        if (currentUserData.hasUsedRef === true) {
+                            document.getElementById("refSystem").classList.add("hidden");
+                        }
+
+                        if(currentUserData.bankInfo) {
+                            document.getElementById("bankName").value = currentUserData.bankInfo.bankName || "";
+                            document.getElementById("bankNumber").value = currentUserData.bankInfo.accountNumber || "";
+                            document.getElementById("bankHolder").value = currentUserData.bankInfo.accountHolder || "";
+                        }
+
+                        if (currentUserData.role === "Admin") {
+                            document.getElementById("uiName").className = "admin-name";
+                            document.getElementById("navAdmin").classList.remove("hidden");
+                        }
+                    }
+                });
+
+                loadInbox(user.uid);
+                loadHistory(user.uid);
+            } else {
+                document.getElementById("mainApp").classList.add("hidden");
+                document.getElementById("loginScreen").classList.remove("hidden");
+            }
+        });
+
+        // CHUYỂN TAB
+        window.switchTab = function(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabId).classList.remove('hidden');
+            element.classList.add('active');
+        }
+
+        // SAO CHÉP MÃ MỜI
+        window.copyRef = function() {
+            const code = document.getElementById("uiRefCode").innerText;
+            navigator.clipboard.writeText(code);
+            alert("Đã sao chép mã: " + code);
+        }
+
+        // NHẬP MÃ GIỚI THIỆU - DÙNG TRANSACTION CHỐNG XUNG ĐỘT
+        window.applyReferralCode = async function() {
+            const inputCode = document.getElementById("inputRefCode").value.trim().toUpperCase();
+            if (currentUserData.hasUsedRef === true) return alert("Bạn đã nhập mã rồi!");
+            if (!inputCode) return alert("Vui lòng nhập mã giới thiệu!");
+            if (inputCode === currentUserData.refCode) return alert("Không thể nhập mã của chính mình!");
+
+            const snapshot = await get(ref(db, 'users'));
+            let foundUid = null;
+
+            snapshot.forEach((child) => {
+                if (child.val().refCode === inputCode) foundUid = child.key;
+            });
+
+            if (foundUid) {
+                // Sử dụng Transaction để cộng tiền tuyệt đối an toàn
+                const userRef = ref(db, 'users/' + auth.currentUser.uid + '/balance');
+                await runTransaction(userRef, (currentBalance) => (currentBalance || 0) + 5000);
+
+                await update(ref(db, 'users/' + auth.currentUser.uid), { 
+                    hasUsedRef: true,
+                    referredBy: foundUid
+                });
+
+                push(ref(db, `users/${auth.currentUser.uid}/history`), {
+                    type: "Thưởng nhập mã giới thiệu", amount: 5000, status: "Thành công", time: new Date().toLocaleString()
+                });
+
+                document.getElementById("refSystem").classList.add("hidden");
+                alert("Chúc mừng! Bạn nhận 5.000 VNĐ. Người mời sẽ nhận 25% hoa hồng mỗi khi bạn xem QC!");
+            } else {
+                alert("Mã giới thiệu không tồn tại!");
+            }
+        }
+
+        // XEM QUẢNG CÁO ADSTERRA (CHỐNG SPAM & BẢO MẬT GIAO DỊCH TRÊN FIREBASE)
+        document.getElementById("btnWatchAd").addEventListener("click", () => {
+            if (isWatchingAd) return alert("Hệ thống đang xử lý lượt xem trước!");
+            
+            isWatchingAd = true;
+            const btn = document.getElementById("btnWatchAd");
+            const status = document.getElementById("adStatus");
+            btn.disabled = true;
+            status.innerText = "Đang kích hoạt quảng cáo an toàn...";
+            
+            const container = document.getElementById("hiddenAdContainer");
+            container.innerHTML = "";
+            let script = document.createElement("script");
+            script.src = "https://pl30841570.effectivecpmnetwork.com/be/b0/8b/beb08be9a75245ef134558730d851eab.js";
+            container.appendChild(script);
+
+            let timeLeft = 6;
+            const interval = setInterval(async () => {
+                timeLeft--;
+                status.innerText = `Đang tải... Còn ${timeLeft}s`;
+                if(timeLeft <= 0) {
+                    clearInterval(interval);
+                    container.innerHTML = "";
+                    
+                    const rewardTotal = 1000; 
+                    const userShare = rewardTotal * 0.60;   
+                    const refShare = rewardTotal * 0.25;    
+                    const feeShare = rewardTotal * 0.02;    
+                    let adminShare = rewardTotal - userShare - feeShare;
+
+                    // 1. Transaction cho User hiện tại
+                    await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + userShare);
+                    
+                    push(ref(db, `users/${auth.currentUser.uid}/history`), {
+                        type: "Xem quảng cáo (60%)", amount: userShare, status: "Thành công", time: new Date().toLocaleString()
+                    });
+
+                    // 2. Transaction cho Người Mời (nếu có)
+                    if (currentUserData.referredBy) {
+                        const refBalNode = ref(db, `users/${currentUserData.referredBy}/balance`);
+                        const refSnap = await get(refBalNode);
+                        if (refSnap.exists()) {
+                            await runTransaction(refBalNode, (b) => (b || 0) + refShare);
+                            push(ref(db, `users/${currentUserData.referredBy}/history`), {
+                                type: "Hoa hồng giới thiệu (25%)", amount: refShare, status: "Thành công", time: new Date().toLocaleString()
+                            });
+                            adminShare -= refShare;
+                        }
+                    }
+
+                    // 3. Cập nhật Quỹ phí & Thu nhập Admin
+                    await runTransaction(ref(db, 'systemConfig/systemFeeFund'), (f) => (f || 0) + feeShare);
+                    await runTransaction(ref(db, 'systemConfig/adminTotalIncome'), (a) => (a || 0) + adminShare);
+
+                    status.innerText = `Thành công! Nhận +${userShare.toLocaleString()} VNĐ`;
+                    btn.disabled = false;
+                    isWatchingAd = false;
+                }
+            }, 1000);
+        });
+
+        // LƯU NGÂN HÀNG & RÚT TIỀN (LÀM SẠCH DỮ LIỆU INPUT)
+        window.saveBankInfo = async function() {
+            if(!auth.currentUser) return;
+            const bankName = document.getElementById("bankName").value.trim().replace(/[<>]/g, "");
+            const accountNumber = document.getElementById("bankNumber").value.trim().replace(/[<>]/g, "");
+            const accountHolder = document.getElementById("bankHolder").value.trim().toUpperCase().replace(/[<>]/g, "");
+
+            if(!bankName || !accountNumber || !accountHolder) return alert("Vui lòng điền đủ thông tin!");
+            await update(ref(db, 'users/' + auth.currentUser.uid + '/bankInfo'), { bankName, accountNumber, accountHolder });
+            alert("Đã lưu ngân hàng an toàn!");
+        }
+
+        window.requestWithdraw = async function() {
+            const amount = parseInt(document.getElementById("withdrawAmount").value);
+            if(isNaN(amount) || amount < 50000) return alert("Rút tối thiểu 50.000 VNĐ!");
+            if(amount > currentUserData.balance) return alert("Số dư không đủ!");
+            if(!currentUserData.bankInfo) return alert("Chưa lưu ngân hàng!");
+
+            openConfirmModal(`Xác nhận rút ${amount.toLocaleString()} VNĐ?`, async () => {
+                // Trừ tiền bằng Transaction an toàn
+                await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) - amount);
+                
+                push(ref(db, `users/${auth.currentUser.uid}/history`), {
+                    type: "Rút tiền", amount: amount, status: "Đang chờ duyệt", time: new Date().toLocaleString()
+                });
+                
+                document.getElementById("withdrawAmount").value = "";
+                alert("Đã gửi yêu cầu rút tiền thành công!");
+            });
+        }
+
+        window.sendFeedback = function() {
+            const content = document.getElementById("feedbackContent").value.trim().replace(/[<>]/g, "");
+            if(!content) return alert("Nhập nội dung!");
+            alert("Đã gửi góp ý!");
+            document.getElementById("feedbackContent").value = "";
+        }
+
+        // TỐI ƯU HÓA TẢI DỮ LIỆU - GIỚI HẠN 20 BẢN GHI GẦN NHẤT
+        function loadInbox(uid) {
+            const inboxQuery = query(ref(db, `users/${uid}/inbox`), limitToLast(20));
+            onValue(inboxQuery, (snap) => {
+                const list = document.getElementById("inboxList");
+                list.innerHTML = "";
+                if(!snap.exists()) { list.innerHTML = `<p style="color: #94a3b8; text-align:center;">Hộp thư trống.</p>`; return; }
+                
+                let msgs = [];
+                snap.forEach((child) => { msgs.unshift(child.val()); }); // Đảo ngược hiển thị mới nhất lên đầu
+                msgs.forEach(msg => {
+                    list.innerHTML += `<div class="msg-box"><h4 style="margin:0 0 5px 0; color:#38bdf8;">${msg.title}</h4><p style="margin:0;">${msg.message}</p><small style="color:#64748b;">${msg.time || ''}</small></div>`;
+                });
+            });
+        }
+
+        function loadHistory(uid) {
+            const historyQuery = query(ref(db, `users/${uid}/history`), limitToLast(20));
+            onValue(historyQuery, (snap) => {
+                const list = document.getElementById("historyList");
+                list.innerHTML = "";
+                if(!snap.exists()) { list.innerHTML = `<p style="color: #94a3b8; text-align:center;">Chưa có giao dịch.</p>`; return; }
+                
+                let hists = [];
+                snap.forEach((child) => { hists.unshift(child.val()); });
+                hists.forEach(h => {
+                    list.innerHTML += `<div class="history-item"><b>${h.type}</b>: ${h.amount.toLocaleString()} VNĐ<br><span style="color:#f59e0b;">Trạng thái: ${h.status}</span><br><small style="color:#64748b;">${h.time}</small></div>`;
+                });
+            });
+        }
+
+        // BẢNG KẾ TOÁN CHI TRẢ ADMIN (-2% PHÍ)
+        window.renderPaymentTable = async function() {
+            const tbody = document.getElementById("paymentTableBody");
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 10px; color: #f59e0b;">Đang tính toán dữ liệu...</td></tr>`;
+
+            try {
+                const snap = await get(ref(db, 'users'));
+                if (!snap.exists()) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 10px;">Chưa có tài khoản nào.</td></tr>`;
+                    return;
+                }
+
+                let html = "";
+                let totalPayout = 0;
+
+                snap.forEach((child) => {
+                    const u = child.val();
+                    const balance = u.balance || 0;
+
+                    if (balance > 0) {
+                        const netPayout = balance * 0.98; 
+                        totalPayout += netPayout;
+
+                        const bank = u.bankInfo 
+                            ? `${u.bankInfo.bankName} - ${u.bankInfo.accountNumber} (${u.bankInfo.accountHolder})`
+                            : `<span style="color: #ef4444;">Chưa liên kết</span>`;
+
+                        html += `
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 8px;"><b>${u.username || 'User'}</b><br><small style="color: #94a3b8;">${u.email || child.key}</small></td>
+                                <td style="padding: 8px; font-size: 11px;">${bank}</td>
+                                <td style="padding: 8px; color: #10b981;">${balance.toLocaleString()}đ</td>
+                                <td style="padding: 8px; color: #f59e0b; font-weight: bold;">${Math.round(netPayout).toLocaleString()}đ</td>
+                            </tr>
+                        `;
+                    }
+                });
+
+                if (html === "") {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 10px;">Không có tài khoản nào có số dư > 0.</td></tr>`;
+                } else {
+                    html += `
+                        <tr style="background: var(--bg-color); font-weight: bold; border-top: 2px solid #38bdf8;">
+                            <td colspan="3" style="padding: 10px; text-align: right; color: #38bdf8;">TỔNG CHI TRẢ DỰ KIẾN:</td>
+                            <td style="padding: 10px; color: #ef4444; font-size: 14px;">${Math.round(totalPayout).toLocaleString()}đ</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML = html;
+                }
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #ef4444;">Lỗi: ${e.message}</td></tr>`;
+            }
+        }
+
+        window.openConfirmModal = function(text, callback) {
+            const modal = document.getElementById("confirmModal");
+            const btn = document.getElementById("btnConfirmAction");
+            document.getElementById("confirmText").innerText = text;
+            modal.classList.remove("hidden");
+            btn.disabled = true;
+            actionCallback = callback;
+            let count = 3;
+            btn.innerText = `Xác nhận (${count}s)`;
+            const timer = setInterval(() => {
+                count--;
+                btn.innerText = `Xác nhận (${count}s)`;
+                if(count === 0) { clearInterval(timer); btn.disabled = false; btn.innerText = "Xác Nhận Ngay!"; }
+            }, 1000);
+        }
+
+        window.closeConfirmModal = function() {
+            document.getElementById("confirmModal").classList.add("hidden");
+            actionCallback = null;
+        }
+
+        document.getElementById("btnConfirmAction").addEventListener("click", () => {
+            if(actionCallback) actionCallback();
+            closeConfirmModal();
+        });
+
+        window.adminExecute = async function(actionType) {
+            if(!currentUserData || currentUserData.role !== "Admin") return alert("Không có quyền!");
+            let confirmMsg = "", executeLogic = null;
+
+            if (actionType === 'globalMsg') {
+                const title = document.getElementById("adminGlobalTitle").value.trim();
+                const message = document.getElementById("adminGlobalMsg").value.trim();
+                if(!title || !message) return alert("Điền đủ thông tin!");
+                confirmMsg = "Gửi thông báo toàn cầu?";
+                executeLogic = async () => {
+                    const snap = await get(ref(db, 'users'));
+                    snap.forEach(u => push(ref(db, `users/${u.key}/inbox`), { title, message, time: new Date().toLocaleString() }));
+                    alert("Đã gửi!");
+                };
+            }
+            else if (actionType === 'addMoney') {
+                const uid = document.getElementById("adminTargetUid").value.trim();
+                const amt = parseInt(document.getElementById("adminMoneyAmount").value);
+                if(!uid || isNaN(amt)) return alert("Nhập đúng UID và số tiền!");
+                confirmMsg = `Cập nhật ${amt} VNĐ cho UID ${uid}?`;
+                executeLogic = async () => {
+                    await runTransaction(ref(db, `users/${uid}/balance`), (b) => (b || 0) + amt);
+                    alert("Cập nhật thành công!");
+                };
+            }
+            else if (actionType === 'enableMaint') { confirmMsg = "Bật bảo trì?"; executeLogic = () => update(ref(db, 'systemConfig'), { maintenance: true }); }
+            else if (actionType === 'disableMaint') { confirmMsg = "Tắt bảo trì?"; executeLogic = () => update(ref(db, 'systemConfig'), { maintenance: false }); }
+            else if (actionType === 'checkUser') {
+                const uid = prompt("Nhập UID:");
+                if(uid) get(ref(db, 'users/' + uid)).then(s => alert(s.exists() ? JSON.stringify(s.val(), null, 2) : "Không tìm thấy!"));
+                return;
+            }
+            else if (actionType === 'showStats') {
+                const adminInc = (await get(ref(db, 'systemConfig/adminTotalIncome'))).val() || 0;
+                const feeFund = (await get(ref(db, 'systemConfig/systemFeeFund'))).val() || 0;
+                get(ref(db, 'users')).then(s => {
+                    let totalUsers = 0, totalBal = 0;
+                    s.forEach(u => { totalUsers++; totalBal += (u.val().balance || 0); });
+                    alert(`📊 THỐNG KÊ HỆ THỐNG:\n- Tổng tài khoản: ${totalUsers}\n- Tổng dư ví user: ${totalBal.toLocaleString()} VNĐ\n- Phí hệ thống tích lũy (2%): ${feeFund.toLocaleString()} VNĐ\n- Thu nhập Admin: ${adminInc.toLocaleString()} VNĐ`);
+                });
+                return;
+            }
+            if(confirmMsg) openConfirmModal(confirmMsg, executeLogic);
+        }
+    </script>
+</body>
+</html>
