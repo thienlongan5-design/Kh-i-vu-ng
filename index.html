@@ -3,23 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Kiếm Tiền Pro - Enterprise Security</title>
+    <title>App Kiếm Tiền Pro - Secure Edition</title>
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --border-color: #334155;
-            --primary: #3b82f6;
-        }
-        .light-mode {
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --border-color: #cbd5e1;
-            --primary: #2563eb;
-        }
-
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --border-color: #334155; --primary: #3b82f6; }
+        .light-mode { --bg-color: #f1f5f9; --card-bg: #ffffff; --text-color: #0f172a; --border-color: #cbd5e1; --primary: #2563eb; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding-bottom: 75px; transition: 0.3s; }
         .container { padding: 15px; max-width: 500px; margin: 0 auto; box-sizing: border-box; }
         .hidden { display: none !important; }
@@ -28,36 +15,27 @@
         button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 5px; transition: 0.3s; font-size: 14px; }
         button:hover { opacity: 0.9; }
         button:disabled { background: #475569; cursor: not-allowed; }
-        .btn-danger { background: #ef4444; } 
-        .btn-warning { background: #f59e0b; color: #000; } 
-        .btn-success { background: #10b981; } 
-        
+        .btn-danger { background: #ef4444; } .btn-warning { background: #f59e0b; color: #000; } .btn-success { background: #10b981; } 
         .card { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--border-color); }
         .admin-name { color: #ef4444 !important; font-weight: bold; text-transform: uppercase; }
-        
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 100; }
         .nav-item { color: #94a3b8; text-align: center; cursor: pointer; font-size: 11px; flex: 1; transition: 0.2s; }
         .nav-item.active { color: #38bdf8; font-weight: bold; transform: translateY(-2px); }
-        
         .msg-box, .history-item { background: var(--bg-color); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #38bdf8; font-size: 13px; }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--card-bg); padding: 20px; border-radius: 12px; width: 85%; max-width: 350px; text-align: center; border: 1px solid var(--border-color); }
-        
         #maintenanceScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; padding: 20px;}
         #hiddenAdContainer { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- MÀN HÌNH BẢO TRÌ -->
     <div id="maintenanceScreen" class="hidden">
         <h1 style="color:#ef4444;">🚧 HỆ THỐNG ĐANG BẢO TRÌ</h1>
-        <p>Hệ thống đang được Admin nâng cấp an toàn. Vui lòng quay lại sau!</p>
+        <p>Hệ thống đang được nâng cấp bảo mật. Vui lòng quay lại sau!</p>
     </div>
 
-    <!-- MÀN HÌNH ĐĂNG NHẬP -->
     <div id="loginScreen" class="container" style="margin-top: 50px;">
         <h2>Đăng Nhập Hệ Thống</h2>
         <div class="card">
@@ -68,7 +46,6 @@
         </div>
     </div>
 
-    <!-- GIAO DIỆN CHÍNH -->
     <div id="mainApp" class="hidden">
         <div class="container" style="padding-bottom: 5px;">
             <div class="top-bar">
@@ -77,127 +54,82 @@
             </div>
         </div>
         
-        <!-- TRANG CHỦ -->
         <div id="tabHome" class="container tab-content">
             <div class="card">
                 <p>Vai trò: <span id="uiRole">...</span></p>
                 <p>Số dư ví: <strong style="color:#10b981; font-size:22px;" id="uiBalance">0</strong> VNĐ</p>
                 <div style="background: var(--bg-color); padding: 10px; border-radius: 6px; font-size: 12px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                    <span>Mã giới thiệu của bạn: <b id="uiRefCode" style="color:#38bdf8;">...</b></span>
+                    <span>Mã giới thiệu: <b id="uiRefCode" style="color:#38bdf8;">...</b></span>
                     <button onclick="copyRef()" style="width: auto; padding: 5px 10px; font-size: 11px;">📋 Sao chép</button>
                 </div>
             </div>
 
-            <!-- Ô NHẬP MÃ GIỚI THIỆU -->
             <div class="card" id="refSystem">
                 <h3>Nhập Mã Giới Thiệu</h3>
-                <p style="font-size: 12px; color: #94a3b8; text-align: center;">Nhập mã bạn bè nhận 5.000đ. Người mời sẽ nhận 25% hoa hồng thụ động!</p>
-                <input type="text" id="inputRefCode" placeholder="Nhập mã giới thiệu...">
+                <input type="text" id="inputRefCode" placeholder="Nhập mã bạn bè...">
                 <button onclick="applyReferralCode()" class="btn-success">Xác Nhận Nhận 5k</button>
             </div>
             
             <div class="card">
                 <h3>Xem Quảng Cáo Nhận Thưởng</h3>
-                <p style="font-size: 12px; color: #94a3b8; text-align: center;">Tích lũy số dư (Nhận 60% thưởng trực tiếp).</p>
-                <button id="btnWatchAd" class="btn-warning">📺 Xem Quảng Cáo Ngay</button>
+                <button id="btnWatchAd" class="btn-warning">📺 Xem Quảng Cáo Nhận 1.000đ</button>
                 <div id="adStatus" style="margin-top:10px; color:#10b981; font-size:13px; text-align:center; font-weight:bold;"></div>
                 <div id="hiddenAdContainer"></div> 
             </div>
 
             <div class="card">
-                <h3>Liên Kết Ngân Hàng & Rút Tiền</h3>
-                <input type="text" id="bankName" placeholder="Tên Ngân Hàng (MB, VCB, Momo...)">
-                <input type="text" id="bankNumber" placeholder="Số tài khoản / Số điện thoại">
-                <input type="text" id="bankHolder" placeholder="Tên chủ thẻ (VIẾT HOA KHÔNG DẤU)">
-                <button onclick="saveBankInfo()" class="btn-success">💾 Lưu Thông Tin Ngân Hàng</button>
-                
+                <h3>Rút Tiền & Ngân Hàng</h3>
+                <input type="text" id="bankName" placeholder="Tên Ngân Hàng (MB, VCB...)">
+                <input type="text" id="bankNumber" placeholder="Số tài khoản">
+                <input type="text" id="bankHolder" placeholder="Tên chủ thẻ (VIẾT HOA)">
+                <button onclick="saveBankInfo()" class="btn-success">💾 Lưu Ngân Hàng</button>
                 <hr style="border-color:var(--border-color); margin:15px 0;">
                 <input type="number" id="withdrawAmount" placeholder="Số tiền rút (Tối thiểu 50.000đ)">
-                <button onclick="requestWithdraw()" class="btn-warning">💸 Gửi Yêu Cầu Rút Tiền</button>
+                <button onclick="requestWithdraw()" class="btn-warning">💸 Gửi Yêu Cầu Rút</button>
             </div>
 
-            <button id="btnLogout" class="btn-danger" style="margin-top:5px; margin-bottom: 20px;">Đăng Xuất Tài Khoản</button>
+            <button id="btnLogout" class="btn-danger" style="margin-top:5px; margin-bottom: 20px;">Đăng Xuất</button>
         </div>
 
-        <!-- HỘP THƯ -->
         <div id="tabInbox" class="container tab-content hidden">
-            <h2>Hộp Thư Thông Báo</h2>
-            <div id="inboxList" style="margin-top: 15px;">
-                <p style="color: #94a3b8; text-align:center;">Đang tải hộp thư...</p>
-            </div>
+            <h2>Hộp Thư</h2>
+            <div id="inboxList" style="margin-top: 15px;"><p style="color: #94a3b8; text-align:center;">Đang tải...</p></div>
         </div>
 
-        <!-- LỊCH SỬ GIAO DỊCH -->
         <div id="tabHistory" class="container tab-content hidden">
             <h2>Lịch Sử Giao Dịch</h2>
-            <div id="historyList" style="margin-top: 15px;">
-                <p style="color: #94a3b8; text-align:center;">Chưa có lịch sử giao dịch.</p>
-            </div>
+            <div id="historyList" style="margin-top: 15px;"><p style="color: #94a3b8; text-align:center;">Trống.</p></div>
         </div>
 
-        <!-- GÓP Ý -->
         <div id="tabFeedback" class="container tab-content hidden">
-            <h2>Góp Ý Hệ Thống</h2>
+            <h2>Góp Ý</h2>
             <div class="card" style="margin-top: 15px;">
-                <textarea id="feedbackContent" rows="4" placeholder="Nhập ý kiến đóng góp..."></textarea>
+                <textarea id="feedbackContent" rows="4" placeholder="Nhập ý kiến..."></textarea>
                 <button onclick="sendFeedback()" class="btn-success">Gửi Góp Ý</button>
             </div>
         </div>
 
-        <!-- BẢNG ĐIỀU KHIỂN ADMIN -->
         <div id="tabAdmin" class="container tab-content hidden">
-            <h2 class="admin-name">Cơ Sở Chỉ Huy Admin</h2>
-            
+            <h2 class="admin-name">Khu Vực Quản Trị</h2>
             <div class="card">
-                <h3>1. Gửi Thông Báo Toàn Cầu</h3>
+                <h3>Gửi Thông Báo Toàn Cầu</h3>
                 <input type="text" id="adminGlobalTitle" placeholder="Tiêu đề...">
                 <input type="text" id="adminGlobalMsg" placeholder="Nội dung...">
-                <button onclick="adminExecute('globalMsg')">Gửi Đến Tất Cả User</button>
+                <button onclick="adminExecute('globalMsg')">Gửi Tất Cả</button>
             </div>
-
             <div class="card">
-                <h3>2 & 3. Quản Lý Số Dư User</h3>
-                <input type="text" id="adminTargetUid" placeholder="Nhập UID người dùng...">
-                <input type="number" id="adminMoneyAmount" placeholder="Số tiền cộng/trừ (+ hoặc -)...">
-                <button onclick="adminExecute('addMoney')" class="btn-warning">Cập Nhật Số Dư</button>
+                <h3>Cộng/Trừ Tiền User</h3>
+                <input type="text" id="adminTargetUid" placeholder="UID người dùng...">
+                <input type="number" id="adminMoneyAmount" placeholder="Số tiền (+ hoặc -)...">
+                <button onclick="adminExecute('addMoney')" class="btn-warning">Thực Hiện</button>
             </div>
-
             <div class="card">
-                <h3>4 & 5. Vận Hành Hệ Thống</h3>
-                <button onclick="adminExecute('enableMaint')" class="btn-danger">🔒 Bật Chế Độ Bảo Trì</button>
-                <button onclick="adminExecute('disableMaint')" class="btn-success" style="margin-top:8px;">🔓 Tắt Chế Độ Bảo Trì</button>
-            </div>
-
-            <div class="card">
-                <h3>6 & 7. Kiểm Tra & Thống Kê</h3>
-                <button onclick="adminExecute('checkUser')" class="btn-warning">🔍 Tra Cứu Thông Tin User</button>
-                <button onclick="adminExecute('showStats')" style="margin-top:8px;" class="btn-success">📊 Thống Kê Hệ Thống</button>
-            </div>
-
-            <!-- BẢNG KẾ TOÁN CHI TRẢ -->
-            <div class="card" style="margin-bottom: 20px;">
-                <h3>📋 Bảng Kế Toán - Danh Sách Cần Chi Trả</h3>
-                <p style="font-size: 12px; color: #94a3b8; text-align: center;">Danh sách tài khoản có số dư kèm số tiền thực nhận (-2% phí).</p>
-                <button onclick="renderPaymentTable()" class="btn-success">🔄 Cập Nhật Danh Sách</button>
-                <div style="overflow-x: auto; margin-top: 10px;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
-                        <thead>
-                            <tr style="border-bottom: 2px solid var(--border-color); color: #38bdf8;">
-                                <th style="padding: 8px;">Tên / Email</th>
-                                <th style="padding: 8px;">Ngân Hàng</th>
-                                <th style="padding: 8px;">Số Dư</th>
-                                <th style="padding: 8px;">Thực Trả (-2%)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="paymentTableBody">
-                            <tr><td colspan="4" style="text-align: center; padding: 10px; color: #94a3b8;">Bấm nút để tải dữ liệu...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                <h3>Hệ Thống</h3>
+                <button onclick="adminExecute('enableMaint')" class="btn-danger">🔒 Bật Bảo Trì</button>
+                <button onclick="adminExecute('disableMaint')" class="btn-success" style="margin-top:8px;">🔓 Tắt Bảo Trì</button>
             </div>
         </div>
 
-        <!-- BOTTOM NAV -->
         <div class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('tabHome', this)">🏠 Trang Chủ</div>
             <div class="nav-item" onclick="switchTab('tabInbox', this)">✉️ Hộp Thư</div>
@@ -207,17 +139,15 @@
         </div>
     </div>
 
-    <!-- MODAL XÁC NHẬN AN TOÀN 3S -->
     <div id="confirmModal" class="modal-overlay hidden">
         <div class="modal-content">
-            <h3 style="color:#f59e0b;">XÁC NHẬN HÀNH ĐỘNG</h3>
-            <p id="confirmText" style="font-size:14px; margin: 15px 0;">Bạn có chắc chắn thực hiện?</p>
+            <h3 style="color:#f59e0b;">XÁC NHẬN</h3>
+            <p id="confirmText" style="font-size:14px; margin: 15px 0;"></p>
             <button id="btnConfirmAction" class="btn-danger" disabled>Xác nhận (3s)</button>
-            <button onclick="closeConfirmModal()" style="background:#475569; margin-top:8px;">Hủy bỏ</button>
+            <button onclick="closeConfirmModal()" style="background:#475569; margin-top:8px;">Hủy</button>
         </div>
     </div>
 
-    <!-- FIREBASE & LOGIC NÂNG CẤP BẢO MẬT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
@@ -232,47 +162,38 @@
 
         let currentUserData = null;
         let actionCallback = null;
-        let isWatchingAd = false; // Anti-cheat Session Lock
+        let isWatchingAd = false;
 
         window.toggleTheme = () => document.body.classList.toggle("light-mode");
 
-        // ĐĂNG NHẬP SẠCH DỮ LIỆU
         document.getElementById("btnLogin").addEventListener("click", async () => {
             const email = document.getElementById("email").value.trim();
             const pass = document.getElementById("pass").value.trim();
-            if(!email || !pass) return document.getElementById("loginError").innerText = "Nhập đầy đủ email và mật khẩu!";
-            document.getElementById("btnLogin").innerText = "Đang xác thực...";
+            if(!email || !pass) return document.getElementById("loginError").innerText = "Nhập đầy đủ thông tin!";
             try { await signInWithEmailAndPassword(auth, email, pass); } 
-            catch (e) { document.getElementById("loginError").innerText = "Sai tài khoản hoặc mật khẩu!"; document.getElementById("btnLogin").innerText = "Đăng Nhập Ngay"; }
+            catch (e) { document.getElementById("loginError").innerText = "Sai tài khoản hoặc mật khẩu!"; }
         });
         document.getElementById("btnLogout").addEventListener("click", () => signOut(auth));
 
-        // BẢO TRÌ REALTIME
         onValue(ref(db, 'systemConfig/maintenance'), (snap) => {
             if (snap.val() === true) document.getElementById("maintenanceScreen").classList.remove("hidden");
             else document.getElementById("maintenanceScreen").classList.add("hidden");
         });
 
-        // GIÁM SÁT REALTIME VÀ TỐI ƯU HÓA TỐC ĐỘ ĐỌC
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById("loginScreen").classList.add("hidden");
                 document.getElementById("mainApp").classList.remove("hidden");
                 
-                // Lắng nghe biến động số dư Realtime an toàn
                 onValue(ref(db, 'users/' + user.uid), (snap) => {
                     if(snap.exists()){
                         currentUserData = snap.val();
                         document.getElementById("uiName").innerText = currentUserData.username || "Thành viên";
                         document.getElementById("uiBalance").innerText = (currentUserData.balance || 0).toLocaleString();
                         document.getElementById("uiRole").innerText = currentUserData.role || "User";
-                        
-                        let refCode = currentUserData.refCode || "REF" + user.uid.substring(0, 5).toUpperCase();
-                        document.getElementById("uiRefCode").innerText = refCode;
+                        document.getElementById("uiRefCode").innerText = currentUserData.refCode || "REF" + user.uid.substring(0, 5).toUpperCase();
 
-                        if (currentUserData.hasUsedRef === true) {
-                            document.getElementById("refSystem").classList.add("hidden");
-                        }
+                        if (currentUserData.hasUsedRef === true) document.getElementById("refSystem").classList.add("hidden");
 
                         if(currentUserData.bankInfo) {
                             document.getElementById("bankName").value = currentUserData.bankInfo.bankName || "";
@@ -286,7 +207,6 @@
                         }
                     }
                 });
-
                 loadInbox(user.uid);
                 loadHistory(user.uid);
             } else {
@@ -295,7 +215,6 @@
             }
         });
 
-        // CHUYỂN TAB
         window.switchTab = function(tabId, element) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -303,230 +222,103 @@
             element.classList.add('active');
         }
 
-        // SAO CHÉP MÃ MỜI
         window.copyRef = function() {
-            const code = document.getElementById("uiRefCode").innerText;
-            navigator.clipboard.writeText(code);
-            alert("Đã sao chép mã: " + code);
+            navigator.clipboard.writeText(document.getElementById("uiRefCode").innerText);
+            alert("Đã sao chép mã!");
         }
 
-        // NHẬP MÃ GIỚI THIỆU - DÙNG TRANSACTION CHỐNG XUNG ĐỘT
         window.applyReferralCode = async function() {
             const inputCode = document.getElementById("inputRefCode").value.trim().toUpperCase();
-            if (currentUserData.hasUsedRef === true) return alert("Bạn đã nhập mã rồi!");
-            if (!inputCode) return alert("Vui lòng nhập mã giới thiệu!");
-            if (inputCode === currentUserData.refCode) return alert("Không thể nhập mã của chính mình!");
+            if (currentUserData.hasUsedRef) return alert("Bạn đã nhập mã rồi!");
+            if (!inputCode) return alert("Nhập mã giới thiệu!");
 
             const snapshot = await get(ref(db, 'users'));
             let foundUid = null;
+            snapshot.forEach((child) => { if (child.val().refCode === inputCode) foundUid = child.key; });
 
-            snapshot.forEach((child) => {
-                if (child.val().refCode === inputCode) foundUid = child.key;
-            });
-
-            if (foundUid) {
-                // Sử dụng Transaction để cộng tiền tuyệt đối an toàn
-                const userRef = ref(db, 'users/' + auth.currentUser.uid + '/balance');
-                await runTransaction(userRef, (currentBalance) => (currentBalance || 0) + 5000);
-
-                await update(ref(db, 'users/' + auth.currentUser.uid), { 
-                    hasUsedRef: true,
-                    referredBy: foundUid
-                });
-
-                push(ref(db, `users/${auth.currentUser.uid}/history`), {
-                    type: "Thưởng nhập mã giới thiệu", amount: 5000, status: "Thành công", time: new Date().toLocaleString()
-                });
-
-                document.getElementById("refSystem").classList.add("hidden");
-                alert("Chúc mừng! Bạn nhận 5.000 VNĐ. Người mời sẽ nhận 25% hoa hồng mỗi khi bạn xem QC!");
-            } else {
-                alert("Mã giới thiệu không tồn tại!");
-            }
+            if (foundUid && foundUid !== auth.currentUser.uid) {
+                await runTransaction(ref(db, 'users/' + auth.currentUser.uid + '/balance'), (b) => (b || 0) + 5000);
+                await update(ref(db, 'users/' + auth.currentUser.uid), { hasUsedRef: true, referredBy: foundUid });
+                push(ref(db, `users/${auth.currentUser.uid}/history`), { type: "Thưởng nhập mã", amount: 5000, status: "Thành công", time: new Date().toLocaleString() });
+                alert("Thành công nhận 5.000 VNĐ!");
+            } else { alert("Mã không hợp lệ!"); }
         }
 
-        // XEM QUẢNG CÁO ADSTERRA (CHỐNG SPAM & BẢO MẬT GIAO DỊCH TRÊN FIREBASE)
         document.getElementById("btnWatchAd").addEventListener("click", () => {
-            if (isWatchingAd) return alert("Hệ thống đang xử lý lượt xem trước!");
-            
+            if (isWatchingAd) return;
             isWatchingAd = true;
             const btn = document.getElementById("btnWatchAd");
             const status = document.getElementById("adStatus");
             btn.disabled = true;
-            status.innerText = "Đang kích hoạt quảng cáo an toàn...";
             
-            const container = document.getElementById("hiddenAdContainer");
-            container.innerHTML = "";
-            let script = document.createElement("script");
-            script.src = "https://pl30841570.effectivecpmnetwork.com/be/b0/8b/beb08be9a75245ef134558730d851eab.js";
-            container.appendChild(script);
-
-            let timeLeft = 6;
+            let timeLeft = 5;
             const interval = setInterval(async () => {
                 timeLeft--;
-                status.innerText = `Đang tải... Còn ${timeLeft}s`;
+                status.innerText = `Đang xem quảng cáo... Còn ${timeLeft}s`;
                 if(timeLeft <= 0) {
                     clearInterval(interval);
-                    container.innerHTML = "";
-                    
-                    const rewardTotal = 1000; 
-                    const userShare = rewardTotal * 0.60;   
-                    const refShare = rewardTotal * 0.25;    
-                    const feeShare = rewardTotal * 0.02;    
-                    let adminShare = rewardTotal - userShare - feeShare;
-
-                    // 1. Transaction cho User hiện tại
-                    await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + userShare);
-                    
-                    push(ref(db, `users/${auth.currentUser.uid}/history`), {
-                        type: "Xem quảng cáo (60%)", amount: userShare, status: "Thành công", time: new Date().toLocaleString()
-                    });
-
-                    // 2. Transaction cho Người Mời (nếu có)
-                    if (currentUserData.referredBy) {
-                        const refBalNode = ref(db, `users/${currentUserData.referredBy}/balance`);
-                        const refSnap = await get(refBalNode);
-                        if (refSnap.exists()) {
-                            await runTransaction(refBalNode, (b) => (b || 0) + refShare);
-                            push(ref(db, `users/${currentUserData.referredBy}/history`), {
-                                type: "Hoa hồng giới thiệu (25%)", amount: refShare, status: "Thành công", time: new Date().toLocaleString()
-                            });
-                            adminShare -= refShare;
-                        }
-                    }
-
-                    // 3. Cập nhật Quỹ phí & Thu nhập Admin
-                    await runTransaction(ref(db, 'systemConfig/systemFeeFund'), (f) => (f || 0) + feeShare);
-                    await runTransaction(ref(db, 'systemConfig/adminTotalIncome'), (a) => (a || 0) + adminShare);
-
-                    status.innerText = `Thành công! Nhận +${userShare.toLocaleString()} VNĐ`;
+                    await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + 1000);
+                    push(ref(db, `users/${auth.currentUser.uid}/history`), { type: "Xem quảng cáo", amount: 1000, status: "Thành công", time: new Date().toLocaleString() });
+                    status.innerText = "Nhận thành công +1.000 VNĐ!";
                     btn.disabled = false;
                     isWatchingAd = false;
                 }
             }, 1000);
         });
 
-        // LƯU NGÂN HÀNG & RÚT TIỀN (LÀM SẠCH DỮ LIỆU INPUT)
         window.saveBankInfo = async function() {
-            if(!auth.currentUser) return;
             const bankName = document.getElementById("bankName").value.trim().replace(/[<>]/g, "");
             const accountNumber = document.getElementById("bankNumber").value.trim().replace(/[<>]/g, "");
             const accountHolder = document.getElementById("bankHolder").value.trim().toUpperCase().replace(/[<>]/g, "");
-
-            if(!bankName || !accountNumber || !accountHolder) return alert("Vui lòng điền đủ thông tin!");
+            if(!bankName || !accountNumber || !accountHolder) return alert("Điền đủ thông tin!");
             await update(ref(db, 'users/' + auth.currentUser.uid + '/bankInfo'), { bankName, accountNumber, accountHolder });
-            alert("Đã lưu ngân hàng an toàn!");
+            alert("Lưu thông tin thành công!");
         }
 
         window.requestWithdraw = async function() {
             const amount = parseInt(document.getElementById("withdrawAmount").value);
-            if(isNaN(amount) || amount < 50000) return alert("Rút tối thiểu 50.000 VNĐ!");
+            if(isNaN(amount) || amount < 50000) return alert("Tối thiểu 50.000 VNĐ!");
             if(amount > currentUserData.balance) return alert("Số dư không đủ!");
-            if(!currentUserData.bankInfo) return alert("Chưa lưu ngân hàng!");
+            if(!currentUserData.bankInfo) return alert("Chưa có thông tin ngân hàng!");
 
             openConfirmModal(`Xác nhận rút ${amount.toLocaleString()} VNĐ?`, async () => {
-                // Trừ tiền bằng Transaction an toàn
                 await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) - amount);
-                
-                push(ref(db, `users/${auth.currentUser.uid}/history`), {
-                    type: "Rút tiền", amount: amount, status: "Đang chờ duyệt", time: new Date().toLocaleString()
-                });
-                
+                push(ref(db, `users/${auth.currentUser.uid}/history`), { type: "Rút tiền", amount: amount, status: "Đang chờ duyệt", time: new Date().toLocaleString() });
                 document.getElementById("withdrawAmount").value = "";
-                alert("Đã gửi yêu cầu rút tiền thành công!");
+                alert("Đã gửi yêu cầu rút tiền!");
             });
         }
 
         window.sendFeedback = function() {
             const content = document.getElementById("feedbackContent").value.trim().replace(/[<>]/g, "");
             if(!content) return alert("Nhập nội dung!");
-            alert("Đã gửi góp ý!");
+            push(ref(db, `systemConfig/feedbacks`), { uid: auth.currentUser.uid, content, time: new Date().toLocaleString() });
+            alert("Gửi góp ý thành công!");
             document.getElementById("feedbackContent").value = "";
         }
 
-        // TỐI ƯU HÓA TẢI DỮ LIỆU - GIỚI HẠN 20 BẢN GHI GẦN NHẤT
         function loadInbox(uid) {
-            const inboxQuery = query(ref(db, `users/${uid}/inbox`), limitToLast(20));
-            onValue(inboxQuery, (snap) => {
+            onValue(query(ref(db, `users/${uid}/inbox`), limitToLast(20)), (snap) => {
                 const list = document.getElementById("inboxList");
                 list.innerHTML = "";
-                if(!snap.exists()) { list.innerHTML = `<p style="color: #94a3b8; text-align:center;">Hộp thư trống.</p>`; return; }
-                
-                let msgs = [];
-                snap.forEach((child) => { msgs.unshift(child.val()); }); // Đảo ngược hiển thị mới nhất lên đầu
-                msgs.forEach(msg => {
-                    list.innerHTML += `<div class="msg-box"><h4 style="margin:0 0 5px 0; color:#38bdf8;">${msg.title}</h4><p style="margin:0;">${msg.message}</p><small style="color:#64748b;">${msg.time || ''}</small></div>`;
+                if(!snap.exists()) return list.innerHTML = `<p style="color: #94a3b8; text-align:center;">Trống.</p>`;
+                snap.forEach((child) => {
+                    const m = child.val();
+                    list.innerHTML += `<div class="msg-box"><h4 style="margin:0 0 5px 0; color:#38bdf8;">${m.title}</h4><p style="margin:0;">${m.message}</p><small style="color:#64748b;">${m.time}</small></div>`;
                 });
             });
         }
 
         function loadHistory(uid) {
-            const historyQuery = query(ref(db, `users/${uid}/history`), limitToLast(20));
-            onValue(historyQuery, (snap) => {
+            onValue(query(ref(db, `users/${uid}/history`), limitToLast(20)), (snap) => {
                 const list = document.getElementById("historyList");
                 list.innerHTML = "";
-                if(!snap.exists()) { list.innerHTML = `<p style="color: #94a3b8; text-align:center;">Chưa có giao dịch.</p>`; return; }
-                
-                let hists = [];
-                snap.forEach((child) => { hists.unshift(child.val()); });
-                hists.forEach(h => {
+                if(!snap.exists()) return list.innerHTML = `<p style="color: #94a3b8; text-align:center;">Trống.</p>`;
+                snap.forEach((child) => {
+                    const h = child.val();
                     list.innerHTML += `<div class="history-item"><b>${h.type}</b>: ${h.amount.toLocaleString()} VNĐ<br><span style="color:#f59e0b;">Trạng thái: ${h.status}</span><br><small style="color:#64748b;">${h.time}</small></div>`;
                 });
             });
-        }
-
-        // BẢNG KẾ TOÁN CHI TRẢ ADMIN (-2% PHÍ)
-        window.renderPaymentTable = async function() {
-            const tbody = document.getElementById("paymentTableBody");
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 10px; color: #f59e0b;">Đang tính toán dữ liệu...</td></tr>`;
-
-            try {
-                const snap = await get(ref(db, 'users'));
-                if (!snap.exists()) {
-                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 10px;">Chưa có tài khoản nào.</td></tr>`;
-                    return;
-                }
-
-                let html = "";
-                let totalPayout = 0;
-
-                snap.forEach((child) => {
-                    const u = child.val();
-                    const balance = u.balance || 0;
-
-                    if (balance > 0) {
-                        const netPayout = balance * 0.98; 
-                        totalPayout += netPayout;
-
-                        const bank = u.bankInfo 
-                            ? `${u.bankInfo.bankName} - ${u.bankInfo.accountNumber} (${u.bankInfo.accountHolder})`
-                            : `<span style="color: #ef4444;">Chưa liên kết</span>`;
-
-                        html += `
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td style="padding: 8px;"><b>${u.username || 'User'}</b><br><small style="color: #94a3b8;">${u.email || child.key}</small></td>
-                                <td style="padding: 8px; font-size: 11px;">${bank}</td>
-                                <td style="padding: 8px; color: #10b981;">${balance.toLocaleString()}đ</td>
-                                <td style="padding: 8px; color: #f59e0b; font-weight: bold;">${Math.round(netPayout).toLocaleString()}đ</td>
-                            </tr>
-                        `;
-                    }
-                });
-
-                if (html === "") {
-                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 10px;">Không có tài khoản nào có số dư > 0.</td></tr>`;
-                } else {
-                    html += `
-                        <tr style="background: var(--bg-color); font-weight: bold; border-top: 2px solid #38bdf8;">
-                            <td colspan="3" style="padding: 10px; text-align: right; color: #38bdf8;">TỔNG CHI TRẢ DỰ KIẾN:</td>
-                            <td style="padding: 10px; color: #ef4444; font-size: 14px;">${Math.round(totalPayout).toLocaleString()}đ</td>
-                        </tr>
-                    `;
-                    tbody.innerHTML = html;
-                }
-            } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #ef4444;">Lỗi: ${e.message}</td></tr>`;
-            }
         }
 
         window.openConfirmModal = function(text, callback) {
@@ -545,59 +337,33 @@
             }, 1000);
         }
 
-        window.closeConfirmModal = function() {
-            document.getElementById("confirmModal").classList.add("hidden");
-            actionCallback = null;
-        }
+        window.closeConfirmModal = function() { document.getElementById("confirmModal").classList.add("hidden"); actionCallback = null; }
+        document.getElementById("btnConfirmAction").addEventListener("click", () => { if(actionCallback) actionCallback(); closeConfirmModal(); });
 
-        document.getElementById("btnConfirmAction").addEventListener("click", () => {
-            if(actionCallback) actionCallback();
-            closeConfirmModal();
-        });
-
-        window.adminExecute = async function(actionType) {
+        window.adminExecute = async function(type) {
             if(!currentUserData || currentUserData.role !== "Admin") return alert("Không có quyền!");
-            let confirmMsg = "", executeLogic = null;
-
-            if (actionType === 'globalMsg') {
+            if (type === 'globalMsg') {
                 const title = document.getElementById("adminGlobalTitle").value.trim();
                 const message = document.getElementById("adminGlobalMsg").value.trim();
-                if(!title || !message) return alert("Điền đủ thông tin!");
-                confirmMsg = "Gửi thông báo toàn cầu?";
-                executeLogic = async () => {
+                if(!title || !message) return alert("Nhập đủ tiêu đề và nội dung!");
+                openConfirmModal("Gửi thông báo toàn cầu?", async () => {
                     const snap = await get(ref(db, 'users'));
                     snap.forEach(u => push(ref(db, `users/${u.key}/inbox`), { title, message, time: new Date().toLocaleString() }));
-                    alert("Đã gửi!");
-                };
-            }
-            else if (actionType === 'addMoney') {
+                    alert("Đã gửi thành công!");
+                });
+            } else if (type === 'addMoney') {
                 const uid = document.getElementById("adminTargetUid").value.trim();
                 const amt = parseInt(document.getElementById("adminMoneyAmount").value);
                 if(!uid || isNaN(amt)) return alert("Nhập đúng UID và số tiền!");
-                confirmMsg = `Cập nhật ${amt} VNĐ cho UID ${uid}?`;
-                executeLogic = async () => {
+                openConfirmModal(`Cộng ${amt} cho UID ${uid}?`, async () => {
                     await runTransaction(ref(db, `users/${uid}/balance`), (b) => (b || 0) + amt);
-                    alert("Cập nhật thành công!");
-                };
-            }
-            else if (actionType === 'enableMaint') { confirmMsg = "Bật bảo trì?"; executeLogic = () => update(ref(db, 'systemConfig'), { maintenance: true }); }
-            else if (actionType === 'disableMaint') { confirmMsg = "Tắt bảo trì?"; executeLogic = () => update(ref(db, 'systemConfig'), { maintenance: false }); }
-            else if (actionType === 'checkUser') {
-                const uid = prompt("Nhập UID:");
-                if(uid) get(ref(db, 'users/' + uid)).then(s => alert(s.exists() ? JSON.stringify(s.val(), null, 2) : "Không tìm thấy!"));
-                return;
-            }
-            else if (actionType === 'showStats') {
-                const adminInc = (await get(ref(db, 'systemConfig/adminTotalIncome'))).val() || 0;
-                const feeFund = (await get(ref(db, 'systemConfig/systemFeeFund'))).val() || 0;
-                get(ref(db, 'users')).then(s => {
-                    let totalUsers = 0, totalBal = 0;
-                    s.forEach(u => { totalUsers++; totalBal += (u.val().balance || 0); });
-                    alert(`📊 THỐNG KÊ HỆ THỐNG:\n- Tổng tài khoản: ${totalUsers}\n- Tổng dư ví user: ${totalBal.toLocaleString()} VNĐ\n- Phí hệ thống tích lũy (2%): ${feeFund.toLocaleString()} VNĐ\n- Thu nhập Admin: ${adminInc.toLocaleString()} VNĐ`);
+                    alert("Thành công!");
                 });
-                return;
+            } else if (type === 'enableMaint') {
+                openConfirmModal("Bật bảo trì hệ thống?", () => update(ref(db, 'systemConfig'), { maintenance: true }));
+            } else if (type === 'disableMaint') {
+                openConfirmModal("Tắt bảo trì hệ thống?", () => update(ref(db, 'systemConfig'), { maintenance: false }));
             }
-            if(confirmMsg) openConfirmModal(confirmMsg, executeLogic);
         }
     </script>
 </body>
