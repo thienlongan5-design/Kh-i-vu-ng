@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Kiếm Tiền Pro - Admin Dashboard</title>
+    <title>App Kiếm Tiền Pro - Official Version</title>
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --border-color: #334155; --primary: #3b82f6; }
         .light-mode { --bg-color: #f1f5f9; --card-bg: #ffffff; --text-color: #0f172a; --border-color: #cbd5e1; --primary: #2563eb; }
@@ -76,6 +76,9 @@
                 <h3>Xem Quảng Cáo Nhận Thưởng</h3>
                 <button id="btnWatchAd" class="btn-warning">📺 Xem Quảng Cáo Nhận 1.000đ</button>
                 <div id="adStatus" style="margin-top:10px; color:#10b981; font-size:13px; text-align:center; font-weight:bold;"></div>
+                
+                <!-- Khung hiển thị quảng cáo thật từ Adsterra của bạn -->
+                <div id="realAdContainer" style="margin-top: 15px; text-align: center;"></div>
             </div>
 
             <div class="card">
@@ -224,7 +227,7 @@
                         if (currentUserData.role === "Admin") {
                             document.getElementById("uiName").className = "admin-name";
                             document.getElementById("navAdmin").classList.remove("hidden");
-                            loadAdminWithdrawals(); // Tải bảng duyệt rút tiền cho Admin
+                            loadAdminWithdrawals();
                         }
                     }
                 });
@@ -265,14 +268,21 @@
             } else { alert("Mã không hợp lệ!"); }
         }
 
+        // Tích hợp xem quảng cáo thật từ Adsterra
         document.getElementById("btnWatchAd").addEventListener("click", () => {
             if (isWatchingAd) return;
             isWatchingAd = true;
             const btn = document.getElementById("btnWatchAd");
             const status = document.getElementById("adStatus");
-            btn.disabled = true;
+            const adBox = document.getElementById("realAdContainer");
             
-            let timeLeft = 5;
+            btn.disabled = true;
+            status.innerText = "Đang tải quảng cáo...";
+
+            // Chèn mã script quảng cáo Adsterra vào khung giao diện
+            adBox.innerHTML = '<script src="https://pl30841570.effectivecpmnetwork.com/be/b0/8b/beb08be9a75245ef134558730d851eab.js"><\/script>';
+
+            let timeLeft = 10; // Đếm ngược 10 giây xem quảng cáo
             const interval = setInterval(async () => {
                 timeLeft--;
                 status.innerText = `Đang xem quảng cáo... Còn ${timeLeft}s`;
@@ -280,7 +290,9 @@
                     clearInterval(interval);
                     await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + 1000);
                     push(ref(db, `users/${auth.currentUser.uid}/history`), { type: "Xem quảng cáo", amount: 1000, status: "Thành công", time: new Date().toLocaleString() });
+                    
                     status.innerText = "Nhận thành công +1.000 VNĐ!";
+                    adBox.innerHTML = ""; // Xóa quảng cáo sau khi xem xong
                     btn.disabled = false;
                     isWatchingAd = false;
                 }
@@ -298,7 +310,6 @@
 
         window.requestWithdraw = async function() {
             const amount = parseInt(document.getElementById("withdrawAmount").value);
-            // Giới hạn hạn mức tối thiểu 50k
             if(isNaN(amount) || amount < 50000) return alert("Hạn mức rút tối thiểu là 50.000 VNĐ!");
             if(amount > currentUserData.balance) return alert("Số dư không đủ!");
             if(!currentUserData.bankInfo) return alert("Chưa có thông tin ngân hàng!");
@@ -351,7 +362,6 @@
             });
         }
 
-        // Tải danh sách yêu cầu rút tiền cho Admin quản lý
         function loadAdminWithdrawals() {
             onValue(ref(db, 'users'), (snapshot) => {
                 const tableBody = document.getElementById("adminWithdrawTable");
@@ -390,7 +400,6 @@
             });
         }
 
-        // Admin bấm nút hoàn thành duyệt đơn rút tiền
         window.approveWithdraw = function(userId, historyKey) {
             openConfirmModal("Xác nhận bạn đã chuyển tiền khoản này cho khách?", async () => {
                 await update(ref(db, `users/${userId}/history/${historyKey}`), { status: "Thành công (Đã thanh toán)" });
