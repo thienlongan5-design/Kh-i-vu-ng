@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Kiếm Tiền Pro - Pro Version 2026</title>
+    <title>App Kiếm Tiền Pro - Version 2026</title>
+
+    <!-- MÃ 1: POPUNDER ADSTERRA (CHẠY NGẦM TOÀN TRANG) -->
+    <script src="https://pl30841570.effectivecpmnetwork.com/be/b0/8b/beb08be9a75245ef134558730d851eab.js"></script>
+
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --border-color: #334155; --primary: #3b82f6; }
         .light-mode { --bg-color: #f1f5f9; --card-bg: #ffffff; --text-color: #0f172a; --border-color: #cbd5e1; --primary: #2563eb; }
@@ -69,13 +73,18 @@
                 </div>
             </div>
 
+            <!-- MÃ 2: BANNER ADSTERRA ĐẶT ĐẦU TRANG CHỦ KHAI THÁC CPM -->
+            <div class="card" style="text-align: center;">
+                <script async="async" data-cfasync="false" src="https://pl30889702.effectivecpmnetwork.com/0461b5d40b2c62d6535832dd2492eaf6/invoke.js"></script>
+                <div id="container-0461b5d40b2c62d6535832dd2492eaf6"></div>
+            </div>
+
             <div class="card" id="refSystem">
                 <h3>Nhập Mã Giới Thiệu</h3>
                 <input type="text" id="inputRefCode" placeholder="Nhập mã bạn bè...">
                 <button onclick="applyReferralCode()" class="btn-success">Xác Nhận Nhận 300đ</button>
             </div>
 
-            <!-- ĐIỂM DANH & VÒNG QUAY -->
             <div class="card" style="text-align: center;">
                 <h3>📅 Điểm Danh Hàng Ngày</h3>
                 <button onclick="dailyCheckIn()" class="btn-success">🎁 Điểm Danh Nhận 50đ</button>
@@ -89,12 +98,11 @@
                 <button id="btnGetSpinAd" onclick="watchAdForSpin()" class="btn-success hidden" style="margin-top: 5px;">📺 Xem QC nhận +1 lượt quay</button>
             </div>
 
-            <!-- XEM QUẢNG CÁO -->
+            <!-- NÚT XEM QUẢNG CÁO KIẾM TIỀN -->
             <div class="card">
                 <h3>Xem Quảng Cáo Thường</h3>
                 <button id="btnWatchAd" class="btn-warning">📺 Xem QC Nhận 10 VNĐ</button>
                 <div id="adStatus" style="margin-top:10px; color:#10b981; font-size:13px; text-align:center; font-weight:bold;"></div>
-                <div id="realAdContainer" style="margin-top: 15px; text-align: center;"></div>
             </div>
 
             <!-- RÚT TIỀN -->
@@ -112,11 +120,9 @@
             <button id="btnLogout" class="btn-danger" style="margin-bottom: 20px;">Đăng Xuất</button>
         </div>
 
-        <!-- TAB GIẢI TRÍ & MINI GAME -->
+        <!-- TAB GIẢI TRÍ -->
         <div id="tabGames" class="container tab-content hidden">
             <h2>🎮 Trò Chơi Giải Trí</h2>
-            
-            <!-- GAME 1: ĐOÁN SỐ -->
             <div class="card" style="text-align: center;">
                 <h3>🎲 Đoán Số May Mắn</h3>
                 <p>Lượt còn lại: <b id="guessCountText" style="color:#f59e0b;">3</b>/3</p>
@@ -126,7 +132,6 @@
                 <button id="btnGetGuessAd" onclick="watchAdForMoreGuesses()" class="btn-warning hidden">📺 Xem QC nhận +3 lượt</button>
             </div>
 
-            <!-- GAME 2: RẮN SĂN MỒI -->
             <div class="card" style="text-align: center;">
                 <h3>🐍 Rắn Săn Mồi Tích Điểm</h3>
                 <canvas id="snakeCanvas" width="240" height="240" style="background:#000; border:2px solid #38bdf8; margin:0 auto; border-radius:6px;"></canvas>
@@ -142,7 +147,7 @@
             </div>
         </div>
 
-        <!-- TAB MÁY ĐÀO (MINING) -->
+        <!-- TAB MÁY ĐÀO -->
         <div id="tabMining" class="container tab-content hidden">
             <h2>⛏️ Máy Đào Tự Động</h2>
             <div class="card" style="text-align: center;">
@@ -153,7 +158,7 @@
             </div>
         </div>
 
-        <!-- TAB SEO TASK & ĐỌC BÁO -->
+        <!-- TAB SEO TASK -->
         <div id="tabTasks" class="container tab-content hidden">
             <h2>🔍 Nhiệm Vụ SEO & Đọc Báo</h2>
             <div class="card">
@@ -223,13 +228,12 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
         import { getDatabase, ref, get, set, update, push, onValue, runTransaction, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 
-        // CẤU HÌNH BẢO BỎ TÚI LÃI (NGUYÊN TẮC VÀNG)
         const PROFIT_CONFIG = {
-            REWARD_AD: 10,           // Xem 1 QC nhận 10đ (Doanh thu ~35đ -> Lãi 25đ)
-            REWARD_SEO: 100,         // SEO Task 100đ
-            REWARD_NEWS: 5,          // Đọc báo 5đ
-            MIN_WITHDRAW: 50000,     // Hạn mức rút tối thiểu 50k
-            MAX_DAILY_ADS: 15        // Tối đa 15 QC/ngày
+            REWARD_AD: 10,           
+            REWARD_SEO: 100,         
+            REWARD_NEWS: 5,          
+            MIN_WITHDRAW: 50000,     
+            MAX_DAILY_ADS: 15        
         };
 
         const firebaseConfig = { 
@@ -245,7 +249,6 @@
 
         window.toggleTheme = () => document.body.classList.toggle("light-mode");
 
-        // ĐĂNG NHẬP
         document.getElementById("btnLogin").addEventListener("click", async () => {
             const email = document.getElementById("email").value.trim();
             const pass = document.getElementById("pass").value.trim();
@@ -255,13 +258,11 @@
         });
         document.getElementById("btnLogout").addEventListener("click", () => signOut(auth));
 
-        // LẮNG NGHE BẢO TRÌ
         onValue(ref(db, 'systemConfig/maintenance'), (snap) => {
             if (snap.val() === true) document.getElementById("maintenanceScreen").classList.remove("hidden");
             else document.getElementById("maintenanceScreen").classList.add("hidden");
         });
 
-        // TRẠNG THÁI TÀI KHOẢN
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById("loginScreen").classList.add("hidden");
@@ -298,7 +299,6 @@
             }
         });
 
-        // CHUYỂN TAB
         window.switchTab = function(tabId, element) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -311,7 +311,6 @@
             alert("Đã sao chép mã!");
         }
 
-        // XEM QUẢNG CÁO
         document.getElementById("btnWatchAd").addEventListener("click", () => {
             if (isWatchingAd) return;
             const today = new Date().toISOString().slice(0, 10);
@@ -324,16 +323,14 @@
             isWatchingAd = true;
             const btn = document.getElementById("btnWatchAd");
             const status = document.getElementById("adStatus");
-            const adBox = document.getElementById("realAdContainer");
             
             btn.disabled = true;
-            status.innerText = "Đang tải quảng cáo...";
-            adBox.innerHTML = '<script src="https://pl30841570.effectivecpmnetwork.com/be/b0/8b/beb08be9a75245ef134558730d851eab.js"><\/script>';
+            status.innerText = "Đang xem quảng cáo Popunder...";
 
             let timeLeft = 10;
             const interval = setInterval(async () => {
                 timeLeft--;
-                status.innerText = `Đang xem quảng cáo... Còn ${timeLeft}s`;
+                status.innerText = `Đang duyệt quảng cáo... Còn ${timeLeft}s`;
                 if(timeLeft <= 0) {
                     clearInterval(interval);
                     const newCount = (userAdStats.date === today) ? userAdStats.count + 1 : 1;
@@ -343,14 +340,12 @@
                     push(ref(db, `users/${auth.currentUser.uid}/history`), { type: "Xem quảng cáo", amount: PROFIT_CONFIG.REWARD_AD, status: "Thành công", time: new Date().toLocaleString() });
                     
                     status.innerText = `Nhận thành công +${PROFIT_CONFIG.REWARD_AD} VNĐ!`;
-                    adBox.innerHTML = "";
                     btn.disabled = false;
                     isWatchingAd = false;
                 }
             }, 1000);
         });
 
-        // ĐIỂM DANH HÀNG NGÀY
         window.dailyCheckIn = async function() {
             const today = new Date().toISOString().slice(0, 10);
             if (currentUserData.lastCheckin === today) return alert("Hôm nay bạn đã điểm danh rồi!");
@@ -361,7 +356,6 @@
             alert("Điểm danh thành công +50 VNĐ!");
         }
 
-        // VÒNG QUAY MAY MẮN
         let currentDegree = 0;
         window.spinWheel = async function() {
             const today = new Date().toISOString().slice(0, 10);
@@ -393,7 +387,6 @@
             }, 3000);
         }
 
-        // LƯU NGÂN HÀNG & RÚT TIỀN (THÔNG BÁO CHỜ DUYỆT)
         window.saveBankInfo = async function() {
             const bankName = document.getElementById("bankName").value.trim();
             const accountNumber = document.getElementById("bankNumber").value.trim();
@@ -413,10 +406,8 @@
                 const uid = auth.currentUser.uid;
                 const nowTime = new Date().toLocaleString();
 
-                // Trừ tiền ngay lập tức
                 await runTransaction(ref(db, `users/${uid}/balance`), (b) => (b || 0) - amount);
 
-                // Lưu Lịch Sử
                 push(ref(db, `users/${uid}/history`), { 
                     type: "Rút tiền về Ngân Hàng", 
                     amount: amount, 
@@ -427,7 +418,6 @@
                     time: nowTime 
                 });
 
-                // Gửi Thư Báo
                 push(ref(db, `users/${uid}/inbox`), {
                     title: "📣 Lệnh rút tiền đang chờ xử lý",
                     message: `Yêu cầu rút ${amount.toLocaleString()} VNĐ về ${currentUserData.bankInfo.bankName} đã ghi nhận. Admin sẽ kiểm tra và chuyển khoản trong 24h - 48h!`,
@@ -439,7 +429,6 @@
             });
         }
 
-        // LOAD LỊCH SỬ & HỘP THƯ
         function loadHistory(uid) {
             onValue(query(ref(db, `users/${uid}/history`), limitToLast(20)), (snap) => {
                 const list = document.getElementById("historyList");
@@ -466,7 +455,6 @@
             });
         }
 
-        // DUYỆT RÚT TIỀN (ADMIN)
         function loadAdminWithdrawals() {
             onValue(ref(db, 'users'), (snapshot) => {
                 const tableBody = document.getElementById("adminWithdrawTable");
@@ -498,7 +486,6 @@
             });
         }
 
-        // MODAL XÁC NHẬN
         window.openConfirmModal = function(text, callback) {
             const modal = document.getElementById("confirmModal");
             const btn = document.getElementById("btnConfirmAction");
