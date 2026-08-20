@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Kiếm Tiền Online VIP - Full Interface & GPS</title>
+    <title>Hệ Thống Kiếm Tiền Online VIP - Tự Động Xin Quyền GPS & Quản Lý Toàn Diện</title>
 
-    <!-- 1. GHI ĐÈ LỆNH ALERT MẶC ĐỊNH CỦA TRÌNH DUYỆT -->
+    <!-- 1. GHI ĐÈ LỆNH ALERT MẶC ĐỊNH CỦA TRÌNH DUYỆT BẰNG CUSTOM MODAL -->
     <script>
         window.alert = function(message, title = "⚠️ THÔNG BÁO HỆ THỐNG") {
             const modal = document.getElementById("globalAlertModal");
@@ -31,7 +31,7 @@
     <script src="https://pl30841570.effectivecpmnetwork.com/be/b0/8b/beb08be9a75245ef134558730d851eab.js"></script>
 
     <style>
-        /* 2. TOÀN BỘ CSS GIAO DIỆN CHÍNH & CUSTOM POPUP */
+        /* 2. HỆ THỐNG BIẾN CSS & GIAO DIỆN CHÍNH (DARK/LIGHT MODE) */
         :root {
             --bg-main: #0f172a;
             --card-bg: #1e293b;
@@ -42,7 +42,9 @@
             --accent-green: #10b981;
             --accent-yellow: #f59e0b;
             --accent-red: #ef4444;
+            --accent-purple: #a855f7;
             --btn-primary: #3b82f6;
+            --shadow-color: rgba(0, 0, 0, 0.4);
         }
 
         .light-mode {
@@ -55,82 +57,385 @@
             --accent-green: #059669;
             --accent-yellow: #d97706;
             --accent-red: #dc2626;
+            --accent-purple: #9333ea;
             --btn-primary: #2563eb;
+            --shadow-color: rgba(0, 0, 0, 0.1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-primary); transition: background-color 0.3s, color 0.3s; padding-bottom: 80px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
 
-        .container { max-width: 480px; margin: 0 auto; padding: 15px; }
-        .hidden { display: none !important; }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding-bottom: 90px;
+            min-height: 100vh;
+        }
 
-        /* HEADER & BANNER */
-        .header-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--card-bg); border-bottom: 1px solid var(--card-border); }
-        .user-welcome { font-size: 14px; font-weight: 600; }
-        .theme-toggle-btn { padding: 6px 12px; background: var(--accent-yellow); color: #000; border: none; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* BANNER HƯỚNG DẪN GPS KHI VÀO TRANG */
+        .gps-prompt-banner {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: #ffffff;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .gps-prompt-banner p {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .gps-prompt-banner button {
+            background: #ffffff;
+            color: #1e40af;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* HEADER & BANNER TOP */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .user-welcome {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .theme-toggle-btn {
+            padding: 6px 14px;
+            background: var(--accent-yellow);
+            color: #000;
+            border: none;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.05);
+        }
 
         /* CARDS & UI COMPONENTS */
-        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .card-title { font-size: 16px; font-weight: 700; color: var(--accent-blue); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        .balance-box { text-align: center; padding: 10px 0; }
-        .balance-amount { font-size: 32px; font-weight: 800; color: var(--accent-green); margin: 5px 0; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 14px var(--shadow-color);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
 
-        /* INPUTS & BUTTONS */
-        input, select, textarea { width: 100%; padding: 12px 14px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--card-border); background: var(--bg-main); color: var(--text-primary); font-size: 14px; outline: none; transition: border-color 0.2s; }
-        input:focus { border-color: var(--accent-blue); }
-        
-        button, .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; text-align: center; transition: transform 0.1s, opacity 0.2s; text-decoration: none; box-sizing: border-box; }
-        button:active, .btn:active { transform: scale(0.98); }
-        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .balance-box {
+            text-align: center;
+            padding: 12px 0;
+            background: rgba(56, 189, 248, 0.05);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px dashed var(--accent-blue);
+        }
+
+        .balance-amount {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--accent-green);
+            margin: 6px 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* INPUTS & FORM ELEMENTS */
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            background: var(--bg-main);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+        }
+
+        button, .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.1s, opacity 0.2s, background-color 0.2s;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        button:active, .btn:active {
+            transform: scale(0.97);
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none !important;
+        }
 
         .btn-blue { background: var(--btn-primary); color: #fff; }
+        .btn-blue:hover { background: #1d4ed8; }
+
         .btn-green { background: var(--accent-green); color: #fff; }
+        .btn-green:hover { background: #047857; }
+
         .btn-yellow { background: var(--accent-yellow); color: #000; }
+        .btn-yellow:hover { background: #d97706; }
+
         .btn-red { background: var(--accent-red); color: #fff; }
+        .btn-red:hover { background: #b91c1c; }
+
+        .btn-purple { background: var(--accent-purple); color: #fff; }
 
         /* NAVIGATION BAR */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto; background: var(--card-bg); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; backdrop-filter: blur(10px); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--text-secondary); cursor: pointer; flex: 1; padding: 4px 0; }
-        .nav-item.active { color: var(--accent-blue); font-weight: bold; }
-        .nav-icon { font-size: 18px; margin-bottom: 2px; }
-
-        /* CUSTOM MODAL / POPUP CSS */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 99999; animation: fadeIn 0.25s ease-out;
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 -4px 16px var(--shadow-color);
         }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            flex: 1;
+            padding: 4px 0;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--accent-blue);
+            font-weight: bold;
+            transform: translateY(-2px);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        /* MODAL POPUP SYSTEM */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            animation: fadeIn 0.25s ease-out;
+            padding: 15px;
+        }
+
         .modal-box {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            width: 85%; max-width: 340px; border-radius: 20px; padding: 24px;
-            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            width: 100%;
+            max-width: 360px;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             animation: popupZoom 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .modal-icon { font-size: 40px; margin-bottom: 10px; }
-        .modal-title { font-size: 18px; font-weight: 800; color: var(--accent-yellow); margin-bottom: 10px; }
-        .modal-msg { font-size: 14px; color: var(--text-primary); line-height: 1.5; margin-bottom: 20px; white-space: pre-line; word-break: break-word; }
+
+        .modal-icon {
+            font-size: 46px;
+            margin-bottom: 12px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--accent-yellow);
+            margin-bottom: 10px;
+        }
+
+        .modal-msg {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 22px;
+            white-space: pre-line;
+            word-break: break-word;
+        }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popupZoom { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* WHEEL SPINNER */
-        .wheel-box { position: relative; width: 180px; height: 180px; margin: 15px auto; border-radius: 50%; border: 4px solid var(--accent-blue); background: conic-gradient(#ef4444 0deg 60deg, #f59e0b 60deg 120deg, #10b981 120deg 180deg, #3b82f6 180deg 240deg, #8b5cf6 240deg 300deg, #ec4899 300deg 360deg); transition: transform 3s cubic-bezier(0.15, 0.9, 0.2, 1); }
-        .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #fff; z-index: 10; }
+        .wheel-box {
+            position: relative;
+            width: 190px;
+            height: 190px;
+            margin: 15px auto;
+            border-radius: 50%;
+            border: 4px solid var(--accent-blue);
+            background: conic-gradient(
+                #ef4444 0deg 60deg, 
+                #f59e0b 60deg 120deg, 
+                #10b981 120deg 180deg, 
+                #3b82f6 180deg 240deg, 
+                #8b5cf6 240deg 300deg, 
+                #ec4899 300deg 360deg
+            );
+            transition: transform 3.5s cubic-bezier(0.15, 0.9, 0.2, 1);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 22px solid #ffffff;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
 
         /* LIST & TABLES */
-        .list-item { background: var(--bg-main); padding: 12px; border-radius: 10px; border-left: 4px solid var(--accent-blue); margin-bottom: 10px; font-size: 13px; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
-        th, td { border: 1px solid var(--card-border); padding: 8px; text-align: left; }
-        th { background: var(--btn-primary); color: white; }
+        .list-item {
+            background: var(--bg-main);
+            padding: 12px 14px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-blue);
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid var(--card-border);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--btn-primary);
+            color: white;
+            font-weight: 700;
+        }
+
+        /* STATUS BADGES */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
     </style>
 </head>
 <body>
 
-    <!-- MÀN HÌNH BẢO TRÌ -->
-    <div id="maintenanceScreen" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0f172a; z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; text-align:center;">
-        <h1 style="color:var(--accent-red); margin-bottom:10px;">🚧 BẢO TRÌ HỆ THỐNG</h1>
-        <p style="color:var(--text-secondary);">Hệ thống đang được nâng cấp bảo mật. Vui lòng quay lại sau!</p>
+    <!-- MÀN HÌNH BẢO TRÌ SYSTEM OVERLAY -->
+    <div id="maintenanceScreen" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0f172a; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:25px; text-align:center;">
+        <div style="font-size:60px; margin-bottom:15px;">🚧</div>
+        <h1 style="color:var(--accent-red); margin-bottom:10px; font-size:24px;">BẢO TRÌ HỆ THỐNG</h1>
+        <p style="color:var(--text-secondary); max-width:320px; line-height:1.5;">Hệ thống đang được nâng cấp cơ sở dữ liệu và thuật toán bảo mật. Vui lòng quay lại sau ít phút!</p>
     </div>
 
     <!-- HEADER TOP BAR -->
@@ -140,16 +445,34 @@
     </div>
 
     <!-- MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ -->
-    <div id="authScreen" class="container" style="margin-top: 40px;">
-        <div style="text-align:center; margin-bottom: 20px;">
-            <h2 style="color:var(--accent-blue); font-size:24px;">ĐĂNG NHẬP APP</h2>
-            <p style="font-size:12px; color:var(--text-secondary);">Hệ thống kiếm tiền uy tín hàng đầu</p>
+    <div id="authScreen" class="container" style="margin-top: 30px;">
+        <div style="text-align:center; margin-bottom: 25px;">
+            <div style="font-size:48px; margin-bottom:8px;">💎</div>
+            <h2 style="color:var(--accent-blue); font-size:26px; font-weight:800;">ĐĂNG NHẬP VIP</h2>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Nền tảng kiếm tiền trực tuyến uy tín hàng đầu</p>
         </div>
+
+        <!-- THÔNG BÁO TỰ ĐỘNG YÊU CẦU GPS -->
+        <div class="gps-prompt-banner">
+            <div>
+                <strong>📍 Định Vị GPS Tự Động</strong>
+                <p>Ứng dụng sẽ yêu cầu quyền GPS để xác minh khu vực tài khoản ngay khi vào.</p>
+            </div>
+        </div>
+
         <div class="card">
-            <input type="email" id="authEmail" placeholder="Nhập địa chỉ Email...">
-            <input type="password" id="authPassword" placeholder="Nhập mật khẩu...">
-            <button id="btnLogin" class="btn-blue" style="margin-top:10px;">Đăng Nhập</button>
-            <p id="authError" style="color:var(--accent-red); font-size:13px; text-align:center; margin-top:10px;"></p>
+            <label for="authEmail">Địa chỉ Email</label>
+            <input type="email" id="authEmail" placeholder="nhapemail@gmail.com">
+            
+            <label for="authPassword">Mật khẩu</label>
+            <input type="password" id="authPassword" placeholder="••••••••">
+
+            <button id="btnLogin" class="btn-blue" style="margin-top:15px;">🚀 Đăng Nhập Hệ Thống</button>
+            <p id="authError" style="color:var(--accent-red); font-size:13px; text-align:center; margin-top:12px; font-weight:600;"></p>
+        </div>
+
+        <div class="card" style="text-align:center; font-size:12px; color:var(--text-secondary);">
+            <p>Bằng cách đăng nhập, bạn đồng ý cấp quyền truy cập vị trí địa lý GPS để phục vụ việc xác thực rút tiền chống gian lận.</p>
         </div>
     </div>
 
@@ -158,97 +481,119 @@
         
         <!-- TAB 1: TRANG CHỦ -->
         <div id="tabHome" class="container tab-content">
+            
+            <!-- CAO BÁO TRẠNG THÁI GPS CHÍNH -->
+            <div id="gpsAlertBanner" class="gps-prompt-banner" style="background: linear-gradient(135deg, #059669, #10b981);">
+                <div>
+                    <strong id="gpsBannerTitle">🎯 Quyền GPS Đã Bật</strong>
+                    <p id="gpsBannerSub">Tọa độ đang được cập nhật tự động cho tài khoản.</p>
+                </div>
+                <button onclick="requestGPSLocation(true)">Cập Nhật</button>
+            </div>
+
             <div class="card">
                 <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-secondary);">
-                    <span>Chức vụ: <b id="uiRole" style="color:var(--accent-yellow);">User</b></span>
-                    <span>UID: <b id="uiUid">00000</b></span>
+                    <span>Quyền hạn: <b id="uiRole" style="color:var(--accent-yellow);">User</b></span>
+                    <span>Mã ID: <b id="uiUid">00000</b></span>
                 </div>
+
                 <div class="balance-box">
-                    <span style="font-size:12px; color:var(--text-secondary);">SỐ DƯ VÍ TÀI KHỎAN</span>
+                    <span style="font-size:12px; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px;">SỐ DƯ VÍ KHẢ DỤNG</span>
                     <div class="balance-amount"><span id="uiBalance">0</span> <small style="font-size:16px;">VNĐ</small></div>
                 </div>
-                <div style="background:var(--bg-main); padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
-                    <span>Mã mời: <b id="uiRefCode" style="color:var(--accent-blue);">REF123</b></span>
-                    <button onclick="copyRefCode()" class="btn-yellow" style="width:auto; padding:5px 10px; font-size:11px;">📋 Sao Chép</button>
+
+                <div style="background:var(--bg-main); padding:10px 14px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+                    <span>Mã giới thiệu: <b id="uiRefCode" style="color:var(--accent-blue);">REF123</b></span>
+                    <button onclick="copyRefCode()" class="btn-yellow" style="width:auto; padding:6px 12px; font-size:11px;">📋 Sao Chép</button>
                 </div>
             </div>
 
             <!-- ADSTERRA BANNER ADS -->
-            <div class="card" style="text-align:center;">
+            <div class="card" style="text-align:center; padding:10px;">
                 <script async="async" data-cfasync="false" src="https://pl30889702.effectivecpmnetwork.com/0461b5d40b2c62d6535832dd2492eaf6/invoke.js"></script>
                 <div id="container-0461b5d40b2c62d6535832dd2492eaf6"></div>
             </div>
 
-            <!-- XÁC MINH VI TRÍ GPS -->
+            <!-- QUẢN LÝ VỊ TRÍ GPS CỦA USER -->
             <div class="card">
-                <div class="card-title">📍 Xác Minh Vị Trí GPS</div>
-                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">Xác minh vị trí chính xác để tăng độ uy tín cho tài khoản khi rút tiền.</p>
-                <button onclick="requestGPSLocation()" class="btn-blue">🎯 Bật GPS Cập Nhật Vị Trí</button>
-                <p id="gpsStatus" style="font-size:11px; margin-top:8px; text-align:center; color:var(--accent-yellow);"></p>
+                <div class="card-title">📍 Vị Trí Định Vị GPS Chính Xác</div>
+                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px; line-height:1.4;">
+                    Hệ thống tự động xin quyền GPS khi bạn truy cập. Nếu bị chặn, vui lòng bấm nút bên dưới để cấp lại quyền nhằm bảo vệ lệnh rút tiền.
+                </p>
+                <button onclick="requestGPSLocation(true)" class="btn-blue">🎯 Kiểm Tra & Quét GPS Ngay</button>
+                <p id="gpsStatus" style="font-size:12px; margin-top:10px; text-align:center; color:var(--accent-yellow); font-weight:600;"></p>
             </div>
 
             <!-- ĐIỂM DANH HÀNG NGÀY -->
             <div class="card">
                 <div class="card-title">📅 Điểm Danh Hàng Ngày</div>
-                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">Nhận thưởng miễn phí 50 VNĐ mỗi ngày khi đăng nhập.</p>
-                <button onclick="handleDailyCheckin()" class="btn-green">🎁 Điểm Danh (+50đ)</button>
+                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">Nhận ngẫu nhiên quà tặng thưởng từ 50 - 500 VNĐ mỗi ngày.</p>
+                <button onclick="handleDailyCheckin()" class="btn-green">🎁 Điểm Danh Báo Danh (+50đ)</button>
             </div>
 
             <!-- VÒNG QUAY MAY MẮN -->
             <div class="card" style="text-align:center;">
-                <div class="card-title">🎡 Vòng Quay May Mắn</div>
-                <p style="font-size:12px; color:var(--text-secondary);">Lượt còn lại trong ngày: <b id="uiSpinCount" style="color:var(--accent-yellow);">3</b>/3</p>
+                <div class="card-title" style="justify-content:center;">🎡 Vòng Quay May Mắn VIP</div>
+                <p style="font-size:12px; color:var(--text-secondary);">Số lượt quay còn lại: <b id="uiSpinCount" style="color:var(--accent-yellow);">3</b> / 3 lượt</p>
                 
-                <div style="position:relative; width:180px; margin: 0 auto;">
+                <div style="position:relative; width:190px; margin: 15px auto;">
                     <div class="wheel-pointer"></div>
                     <div id="wheelSpinner" class="wheel-box"></div>
                 </div>
 
-                <button id="btnSpin" onclick="handleSpinWheel()" class="btn-yellow" style="margin-top:10px;">🔄 Quay Ngay</button>
+                <button id="btnSpin" onclick="handleSpinWheel()" class="btn-yellow" style="margin-top:10px;">🔄 Bắt Đầu Quay</button>
             </div>
 
             <!-- XEM QUẢNG CÁO KIẾM TIỀN -->
             <div class="card">
                 <div class="card-title">📺 Xem Quảng Cáo Nhiệm Vụ</div>
-                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">Xem 10 giây quảng cáo để nhận 20 VNĐ cộng thẳng vào ví.</p>
-                <button id="btnWatchAd" class="btn-blue">▶️ Xem Quảng Cáo (+20đ)</button>
+                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">Xem đủ 10 giây quảng cáo tài trợ để nhận ngay +20 VNĐ vào ví.</p>
+                <button id="btnWatchAd" class="btn-blue">▶️ Xem Quảng Cáo Nhận Thưởng (+20đ)</button>
                 <div id="adCountdownText" style="text-align:center; font-size:13px; color:var(--accent-green); margin-top:8px; font-weight:bold;"></div>
             </div>
 
             <!-- RÚT TIỀN VỀ NGÂN HÀNG -->
             <div class="card">
                 <div class="card-title">💳 Rút Tiền Về Ngân Hàng</div>
-                <input type="text" id="inputBankName" placeholder="Tên Ngân Hàng (VD: MBBank, Vietcombank...)">
-                <input type="text" id="inputBankAcc" placeholder="Số tài khoản ngân hàng">
-                <input type="text" id="inputBankHolder" placeholder="Tên chủ tài khoản (VIẾT HOA)">
-                <button onclick="handleSaveBank()" class="btn-green" style="margin-bottom:15px;">💾 Lưu Thông Tin Ngân Hàng</button>
                 
-                <hr style="border-color:var(--card-border); margin:10px 0;">
+                <label for="inputBankName">Tên Ngân Hàng</label>
+                <input type="text" id="inputBankName" placeholder="Ví dụ: MBBank, Vietcombank, Techcombank...">
                 
-                <input type="number" id="inputWithdrawAmount" placeholder="Nhập số tiền muốn rút (Tối thiểu 10.000đ)">
-                <button onclick="handleWithdrawRequest()" class="btn-red">💸 Yêu Cầu Rút Money</button>
+                <label for="inputBankAcc">Số Tài Khoản</label>
+                <input type="text" id="inputBankAcc" placeholder="Nhập số tài khoản ngân hàng...">
+                
+                <label for="inputBankHolder">Tên Chủ Tài Khoản</label>
+                <input type="text" id="inputBankHolder" placeholder="VIẾT HOA KHÔNG DẤU (VD: NGUYEN VAN A)">
+                
+                <button onclick="handleSaveBank()" class="btn-green" style="margin-bottom:15px; margin-top:6px;">💾 Lưu Thông Tin Thanh Toán</button>
+                
+                <hr style="border-color:var(--card-border); margin:12px 0;">
+                
+                <label for="inputWithdrawAmount">Số Tiền Muốn Rút (Tối thiểu 10.000đ)</label>
+                <input type="number" id="inputWithdrawAmount" placeholder="Nhập số tiền VNĐ...">
+                <button onclick="handleWithdrawRequest()" class="btn-red" style="margin-top:6px;">💸 Tạo Lệnh Rút Money</button>
             </div>
 
-            <button onclick="handleLogout()" class="btn-red" style="margin-top:10px; margin-bottom:20px;">🚪 Đăng Xuất</button>
+            <button onclick="handleLogout()" class="btn-red" style="margin-top:10px; margin-bottom:20px;">🚪 Đăng Xuất Tài Khoản</button>
         </div>
 
         <!-- TAB 2: TRÒ CHƠI GIẢI TRÍ -->
         <div id="tabGames" class="container tab-content hidden">
             <div class="card" style="text-align:center;">
-                <div class="card-title">🎲 Đoán Số May Mắn</div>
-                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">Dự đoán số từ 1 - 100 để nhận ngay 200 VNĐ.</p>
-                <input type="number" id="inputGuessNum" placeholder="Nhập số dự đoán (1-100)..." style="text-align:center;">
-                <button onclick="handlePlayGuessGame()" class="btn-green">🎯 Mở Thưởng</button>
+                <div class="card-title" style="justify-content:center;">🎲 Dự Đoán Con Số May Mắn</div>
+                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">Dự đoán chính xác con số hệ thống chọn từ 1 đến 100 để thưởng +200 VNĐ.</p>
+                <input type="number" id="inputGuessNum" placeholder="Nhập con số từ 1 - 100..." style="text-align:center; font-size:18px; font-weight:bold;">
+                <button onclick="handlePlayGuessGame()" class="btn-green" style="margin-top:8px;">🎯 Thử Vận May</button>
             </div>
         </div>
 
         <!-- TAB 3: MÁY ĐÀO TỰ ĐỘNG -->
         <div id="tabMining" class="container tab-content hidden">
             <div class="card" style="text-align:center;">
-                <div class="card-title">⛏️ Máy Đào Tiền Tự Động</div>
-                <div style="font-size:50px; margin:15px 0;">🎰</div>
-                <p style="font-size:13px; margin-bottom:5px;">Trạng thái: <b id="miningStatusText" style="color:var(--accent-red);">Đang dừng</b></p>
-                <p style="font-size:13px; margin-bottom:15px;">Đã đào được: <b id="minedAmountText" style="color:var(--accent-green);">0</b> VNĐ</p>
+                <div class="card-title" style="justify-content:center;">⛏️ Máy Đào Tiền Tự Động (Cloud Mining)</div>
+                <div style="font-size:55px; margin:15px 0;">🎰</div>
+                <p style="font-size:13px; margin-bottom:6px;">Trạng thái: <b id="miningStatusText" style="color:var(--accent-red);">Đang dừng hoạt động</b></p>
+                <p style="font-size:13px; margin-bottom:16px;">Đã đào được: <b id="minedAmountText" style="color:var(--accent-green);">0</b> VNĐ</p>
                 <button onclick="handleStartMining()" class="btn-yellow">⚡ Xem QC Kích Hoạt Máy Đào (24h)</button>
             </div>
         </div>
@@ -256,33 +601,42 @@
         <!-- TAB 4: NHIỆM VỤ SEO -->
         <div id="tabTasks" class="container tab-content hidden">
             <div class="card">
-                <div class="card-title">🔍 Nhiệm Vụ SEO YeuMoney (+250đ)</div>
-                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">Vượt link lấy mã xác nhận và dán vào bên dưới để nhận thưởng.</p>
-                <a href="https://yeumoney.com/oWCXUIOwBc5" target="_blank" class="btn btn-yellow" style="margin-bottom:10px;">🔗 LẤY MÃ XÁC NHẬN SEO</a>
-                <input type="text" id="inputSeoCode" placeholder="Dán mã SEO nhận được vào đây...">
-                <button onclick="handleSubmitSeoTask()" class="btn-green">Xác Nhận Nhận 250 VNĐ</button>
+                <div class="card-title">🔍 Nhiệm Vụ Tìm Mã SEO YeuMoney (+250đ)</div>
+                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px; line-height:1.4;">
+                    Bấm nút bên dưới để vượt liên kết lấy mã xác nhận. Sau đó dán mã thu được vào ô bên dưới để cộng tiền.
+                </p>
+                <a href="https://yeumoney.com/oWCXUIOwBc5" target="_blank" class="btn btn-yellow" style="margin-bottom:12px;">🔗 LẤY MÃ XÁC NHẬN SEO</a>
+                
+                <label for="inputSeoCode">Mã Nhận Được</label>
+                <input type="text" id="inputSeoCode" placeholder="Dán mã SEO vào đây...">
+                <button onclick="handleSubmitSeoTask()" class="btn-green" style="margin-top:6px;">Xác Nhận & Nhận 250 VNĐ</button>
             </div>
         </div>
 
         <!-- TAB 5: HỘP THƯ SỰ KIỆN -->
         <div id="tabInbox" class="container tab-content hidden">
-            <h3 style="color:var(--accent-blue); margin-bottom:10px;">✉️ Hộp Thư Thông Báo</h3>
+            <h3 style="color:var(--accent-blue); margin-bottom:12px; font-size:18px;">✉️ Hộp Thư Thông Báo</h3>
             <div id="inboxContainer"></div>
         </div>
 
         <!-- TAB 6: LỊCH SỬ GIAO DỊCH -->
         <div id="tabHistory" class="container tab-content hidden">
-            <h3 style="color:var(--accent-blue); margin-bottom:10px;">📜 Lịch Sử Giao Dịch</h3>
+            <h3 style="color:var(--accent-blue); margin-bottom:12px; font-size:18px;">📜 Lịch Sử Giao Dịch</h3>
             <div id="historyContainer"></div>
         </div>
 
         <!-- TAB 7: QUẢN TRỊ ADMIN -->
         <div id="tabAdmin" class="container tab-content hidden">
-            <h3 style="color:var(--accent-red); margin-bottom:10px;">⚙️ Admin Duyệt Rút Tiền & GPS</h3>
-            <div class="card" style="overflow-x:auto;">
+            <h3 style="color:var(--accent-red); margin-bottom:12px; font-size:18px;">⚙️ Admin Duyệt Rút Tiền & GPS Vị Trí</h3>
+            <div class="card" style="overflow-x:auto; padding:10px;">
                 <table>
                     <thead>
-                        <tr><th>User / Ngân Hàng</th><th>GPS Map</th><th>Số Tiền</th><th>Thao Tác</th></tr>
+                        <tr>
+                            <th>User / Ngân Hàng</th>
+                            <th>Định Vị GPS</th>
+                            <th>Số Tiền</th>
+                            <th>Thao Tác</th>
+                        </tr>
                     </thead>
                     <tbody id="adminTableBody"></tbody>
                 </table>
@@ -301,33 +655,34 @@
         </div>
     </div>
 
-    <!-- KHUNG POPUP ALERT TÙY CHỈNH -->
+    <!-- KHUNG MODAL POPUP ALERT CỦA HỆ THỐNG -->
     <div id="globalAlertModal" class="modal-overlay hidden">
         <div class="modal-box">
             <div class="modal-icon">🔔</div>
             <div id="globalAlertTitle" class="modal-title">THÔNG BÁO</div>
-            <div id="globalAlertMsg" class="modal-msg">Nội dung thông báo hiển thị ở đây...</div>
+            <div id="globalAlertMsg" class="modal-msg">Nội dung thông báo hiển thị tại đây...</div>
             <button onclick="closeGlobalAlert()" class="btn-blue">Đồng Ý</button>
         </div>
     </div>
 
-    <!-- KHUNG CONFIRM MODAL -->
+    <!-- KHUNG CONFIRM MODAL CHO CÁC GIAO DỊCH QUAN TRỌNG -->
     <div id="globalConfirmModal" class="modal-overlay hidden">
         <div class="modal-box">
             <div class="modal-icon">⚠️</div>
             <div class="modal-title" style="color:var(--accent-yellow);">XÁC NHẬN GIAO DỊCH</div>
-            <div id="globalConfirmMsg" class="modal-msg">Bạn có chắc chắn muốn thực hiện?</div>
+            <div id="globalConfirmMsg" class="modal-msg">Bạn có chắc chắn muốn thực hiện hành động này?</div>
             <button id="btnConfirmExecute" class="btn-red" style="margin-bottom:8px;">Xác Nhận (3s)</button>
             <button onclick="closeConfirmModal()" class="btn" style="background:#475569; color:#fff;">Hủy Bỏ</button>
         </div>
     </div>
 
-    <!-- CODE JAVASCRIPT LOGIC & FIREBASE -->
+    <!-- CODE JAVASCRIPT XỬ LÝ LOGIC APP & TỰ ĐỘNG XIN QUYỀN GPS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
         import { getDatabase, ref, get, set, update, push, onValue, runTransaction, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 
+        // CẤU HÌNH THAM SỐ HỆ THỐNG
         const CONFIG = {
             MIN_WITHDRAW: 10000,
             REWARD_AD: 20,
@@ -353,13 +708,106 @@
         let userData = null;
         let confirmCallback = null;
         let isAdRunning = false;
+        let gpsRequestedOnStart = false;
 
         window.toggleTheme = () => document.body.classList.toggle("light-mode");
 
+        // 3. TỰ ĐỘNG XIN QUYỀN VỊ TRÍ GPS KHI NGƯỜI DÙNG VÀO TRANG HOẶC ĐĂNG NHẬP
+        window.addEventListener("DOMContentLoaded", () => {
+            autoRequestGPSOnPageLoad();
+        });
+
+        function autoRequestGPSOnPageLoad() {
+            if (!gpsRequestedOnStart) {
+                gpsRequestedOnStart = true;
+                requestGPSLocation(false);
+            }
+        }
+
+        // HÀM LẤY VỊ TRÍ GPS CHÍNH XÁC (TỰ ĐỘNG & BẰNG TAY)
+        window.requestGPSLocation = function(isManualTrigger = false) {
+            if (!navigator.geolocation) {
+                if (isManualTrigger) alert("Trình duyệt của bạn không hỗ trợ định vị GPS!", "LỖI GEOLOCATION");
+                updateGPSBannerUI(false, "Trình duyệt không hỗ trợ GPS");
+                return;
+            }
+
+            const statusEl = document.getElementById("gpsStatus");
+            if (statusEl) statusEl.innerText = "⌛ Đang kết nối định vị GPS...";
+
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    const acc = pos.coords.accuracy;
+                    const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+
+                    updateGPSBannerUI(true, `Độ chính xác ~${Math.round(acc)}m`);
+
+                    if (statusEl) {
+                        statusEl.innerText = `✅ GPS: ${lat.toFixed(3)}, ${lng.toFixed(3)} (Sai số ~${Math.round(acc)}m)`;
+                    }
+
+                    // Nếu người dùng đã đăng nhập, lưu ngay vị trí lên Firebase
+                    if (auth.currentUser) {
+                        await update(ref(db, `users/${auth.currentUser.uid}/gps`), {
+                            latitude: lat,
+                            longitude: lng,
+                            accuracy: `${Math.round(acc)}m`,
+                            mapsUrl: mapsUrl,
+                            updatedAt: new Date().toLocaleString()
+                        });
+                    }
+
+                    if (isManualTrigger) {
+                        alert(`Xác minh vị trí GPS thành công!\nToạ độ: ${lat}, ${lng}\nĐộ chính xác: ~${Math.round(acc)} mét`, "ĐỊNH VỊ GPS");
+                    }
+                },
+                (err) => {
+                    let errMsg = "Không thể lấy vị trí.";
+                    if (err.code === err.PERMISSION_DENIED) {
+                        errMsg = "Người dùng từ chối cấp quyền GPS!";
+                    } else if (err.code === err.POSITION_UNAVAILABLE) {
+                        errMsg = "Không có tín hiệu GPS!";
+                    } else if (err.code === err.TIMEOUT) {
+                        errMsg = "Hết thời gian tìm tín hiệu GPS!";
+                    }
+
+                    updateGPSBannerUI(false, errMsg);
+                    if (statusEl) statusEl.innerText = "❌ " + errMsg;
+
+                    if (isManualTrigger) {
+                        alert("Vui lòng cho phép quyền truy cập vị trí (Location Permission) trên trình duyệt để tiếp tục!", "CẢNH BÁO GPS");
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+            );
+        };
+
+        function updateGPSBannerUI(isSuccess, message) {
+            const banner = document.getElementById("gpsAlertBanner");
+            const title = document.getElementById("gpsBannerTitle");
+            const sub = document.getElementById("gpsBannerSub");
+
+            if (!banner || !title || !sub) return;
+
+            if (isSuccess) {
+                banner.style.background = "linear-gradient(135deg, #059669, #10b981)";
+                title.innerText = "🎯 Định Vị GPS Đã Bật";
+                sub.innerText = "Đã cập nhật tọa độ chính xác: " + message;
+            } else {
+                banner.style.background = "linear-gradient(135deg, #dc2626, #ef4444)";
+                title.innerText = "⚠️ Chưa Cấp Quyền GPS";
+                sub.innerText = message + " - Bấm nút bên để bật lại.";
+            }
+        }
+
+        // ĐĂNG NHẬP TÀI KHỎAN
         document.getElementById("btnLogin").addEventListener("click", async () => {
             const email = document.getElementById("authEmail").value.trim();
             const pass = document.getElementById("authPassword").value.trim();
             if(!email || !pass) return document.getElementById("authError").innerText = "Vui lòng nhập Email và Mật khẩu!";
+            
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (err) {
@@ -369,6 +817,7 @@
 
         window.handleLogout = () => signOut(auth);
 
+        // KIỂM TRA MÀN HÌNH BẢO TRÌ SYSTEM
         onValue(ref(db, 'systemConfig/maintenance'), (snap) => {
             if (snap.val() === true) {
                 document.getElementById("maintenanceScreen").classList.remove("hidden");
@@ -377,11 +826,15 @@
             }
         });
 
+        // LẮNG NGHE TRẠNG THÁI AUTH
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById("authScreen").classList.add("hidden");
                 document.getElementById("mainApp").classList.remove("hidden");
                 document.getElementById("topHeader").classList.remove("hidden");
+
+                // Khi đăng nhập thành công, kích hoạt quét lại GPS để đồng bộ tài khoản
+                requestGPSLocation(false);
 
                 onValue(ref(db, `users/${user.uid}`), (snap) => {
                     if (snap.exists()) {
@@ -393,7 +846,7 @@
                         document.getElementById("uiRefCode").innerText = userData.refCode || "REF" + user.uid.substring(0, 5).toUpperCase();
 
                         if (userData.gps) {
-                            document.getElementById("gpsStatus").innerText = `📍 Vị trí GPS gần nhất: Lat ${userData.gps.latitude.toFixed(2)}, Lng ${userData.gps.longitude.toFixed(2)}`;
+                            document.getElementById("gpsStatus").innerText = `📍 Vị trí lưu gần nhất: Lat ${userData.gps.latitude.toFixed(3)}, Lng ${userData.gps.longitude.toFixed(3)}`;
                         }
 
                         if (userData.bankInfo) {
@@ -418,6 +871,7 @@
             }
         });
 
+        // CHUYỂN TAB CỦA ỨNG DỤNG
         window.switchTab = function(tabId, el) {
             document.querySelectorAll(".tab-content").forEach(t => t.classList.add("hidden"));
             document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
@@ -425,45 +879,12 @@
             if (el) el.classList.add("active");
         };
 
-        // HÀM LẤY VỊ TRÍ GPS CHÍNH XÁC
-        window.requestGPSLocation = function() {
-            if (!navigator.geolocation) {
-                return alert("Trình duyệt của bạn không hỗ trợ định vị GPS!", "LỖI GEOLOCATION");
-            }
-
-            document.getElementById("gpsStatus").innerText = "⌛ Đang quét tín hiệu GPS...";
-
-            navigator.geolocation.getCurrentPosition(
-                async (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    const acc = pos.coords.accuracy;
-                    const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-
-                    await update(ref(db, `users/${auth.currentUser.uid}/gps`), {
-                        latitude: lat,
-                        longitude: lng,
-                        accuracy: `${Math.round(acc)}m`,
-                        mapsUrl: mapsUrl,
-                        updatedAt: new Date().toLocaleString()
-                    });
-
-                    document.getElementById("gpsStatus").innerText = `✅ Đã cập nhật GPS thành công (Độ chính xác ~${Math.round(acc)}m)`;
-                    alert(`Đã xác minh vị trí GPS thành công!\nĐộ chính xác: ~${Math.round(acc)} mét`, "XÁC MINH GPS");
-                },
-                (err) => {
-                    document.getElementById("gpsStatus").innerText = "❌ Chưa bật quyền truy cập GPS!";
-                    alert("Bạn cần nhấn 'Cho phép' khi trình duyệt hỏi quyền truy cập vị trí để hoàn tất!", "CẢNH BÁO GPS");
-                },
-                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-            );
-        };
-
         window.copyRefCode = function() {
             navigator.clipboard.writeText(document.getElementById("uiRefCode").innerText);
             alert("Đã sao chép mã giới thiệu vào bộ nhớ tạm!", "THÀNH CÔNG");
         };
 
+        // ĐIỂM DANH HÀNG NGÀY
         window.handleDailyCheckin = async function() {
             const today = new Date().toISOString().slice(0, 10);
             if (userData.lastCheckin === today) {
@@ -480,16 +901,17 @@
                 time: new Date().toLocaleString()
             });
 
-            alert(`Bạn đã nhận được +${CONFIG.REWARD_CHECKIN} VNĐ điểm danh!`, "THÀNH CÔNG");
+            alert(`Bạn đã nhận được +${CONFIG.REWARD_CHECKIN} VNĐ thưởng điểm danh!`, "THÀNH CÔNG");
         };
 
+        // XEM QUẢNG CÁO KIẾM TIỀN
         document.getElementById("btnWatchAd").addEventListener("click", () => {
             if (isAdRunning) return;
             const today = new Date().toISOString().slice(0, 10);
             const stats = userData.adStats || { date: today, count: 0 };
 
             if (stats.date === today && stats.count >= CONFIG.MAX_DAILY_ADS) {
-                return alert(`Bạn đã xem đạt giới hạn tối đa ${CONFIG.MAX_DAILY_ADS} QC/ngày!`, "THÔNG BÁO");
+                return alert(`Bạn đã đạt giới hạn tối đa xem ${CONFIG.MAX_DAILY_ADS} QC/ngày!`, "THÔNG BÁO");
             }
 
             isAdRunning = true;
@@ -524,13 +946,14 @@
             }, 1000);
         });
 
+        // VÒNG QUAY MAY MẮN
         let wheelDegree = 0;
         window.handleSpinWheel = async function() {
             const today = new Date().toISOString().slice(0, 10);
             let spinData = userData.spinData || { date: today, count: 3 };
             if (spinData.date !== today) spinData = { date: today, count: 3 };
 
-            if (spinData.count <= 0) return alert("Bạn đã hết lượt quay ngày hôm nay!", "THÔNG BÁO");
+            if (spinData.count <= 0) return alert("Bạn đã dùng hết 3 lượt quay của ngày hôm nay!", "THÔNG BÁO");
 
             spinData.count -= 1;
             await update(ref(db, `users/${auth.currentUser.uid}/spinData`), spinData);
@@ -547,26 +970,28 @@
                 if (reward > 0) {
                     await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + reward);
                     push(ref(db, `users/${auth.currentUser.uid}/history`), { type: "Vòng quay may mắn", amount: reward, status: "✅ Thành công", time: new Date().toLocaleString() });
-                    alert(`Chúc mừng! Bạn quay trúng phần thưởng ${reward} VNĐ.`, "VÒNG QUAY");
+                    alert(`Chúc mừng! Bạn quay trúng phần thưởng +${reward} VNĐ.`, "VÒNG QUAY");
                 } else {
-                    alert("Rất tiếc! Chúc bạn may mắn ở lượt quay sau.", "VÒNG QUAY");
+                    alert("Rất tiếc! Chúc bạn may mắn hơn ở lượt quay tiếp theo.", "VÒNG QUAY");
                 }
-            }, 3000);
+            }, 3500);
         };
 
+        // LƯU NGÂN HÀNG
         window.handleSaveBank = async function() {
             const bankName = document.getElementById("inputBankName").value.trim();
             const accountNumber = document.getElementById("inputBankAcc").value.trim();
             const accountHolder = document.getElementById("inputBankHolder").value.trim().toUpperCase();
 
             if (!bankName || !accountNumber || !accountHolder) {
-                return alert("Vui lòng điền đầy đủ tất cả thông tin ngân hàng!", "LỖI CHƯA ĐẦY ĐỦ");
+                return alert("Vui lòng điền đầy đủ tất cả thông tin tài khoản ngân hàng!", "CẢNH BÁO");
             }
 
             await update(ref(db, `users/${auth.currentUser.uid}/bankInfo`), { bankName, accountNumber, accountHolder });
-            alert("Đã lưu thông tin tài khoản ngân hàng thành công!", "THÀNH CÔNG");
+            alert("Đã lưu thành công thông tin ngân hàng của bạn!", "THÀNH CÔNG");
         };
 
+        // RÚT TIỀN VỀ NGÂN HÀNG
         window.handleWithdrawRequest = function() {
             const amount = parseInt(document.getElementById("inputWithdrawAmount").value);
 
@@ -574,13 +999,13 @@
                 return alert(`Số tiền rút tối thiểu là ${CONFIG.MIN_WITHDRAW.toLocaleString()} VNĐ!`, "RÚT TIỀN THẤT BẠI");
             }
             if (amount > (userData.balance || 0)) {
-                return alert("Số dư khả dụng trong tài khoản của bạn không đủ!", "RÚT TIỀN THẤT BẠI");
+                return alert("Số dư tài khoản không đủ để thực hiện giao dịch này!", "RÚT TIỀN THẤT BẠI");
             }
             if (!userData.bankInfo) {
-                return alert("Vui lòng nhập và lưu thông tin Ngân Hàng trước khi tạo lệnh!", "CẢNH BÁO");
+                return alert("Vui lòng nhập và lưu thông tin Ngân Hàng trước khi rút tiền!", "CẢNH BÁO");
             }
 
-            openConfirmModal(`Xác nhận rút ${amount.toLocaleString()} VNĐ về ngân hàng ${userData.bankInfo.bankName}?`, async () => {
+            openConfirmModal(`Xác nhận yêu cầu rút ${amount.toLocaleString()} VNĐ về ngân hàng ${userData.bankInfo.bankName}?`, async () => {
                 const uid = auth.currentUser.uid;
                 const now = new Date().toLocaleString();
 
@@ -599,19 +1024,20 @@
 
                 push(ref(db, `users/${uid}/inbox`), {
                     title: "⚠️ Thông báo xử lý lệnh rút tiền",
-                    message: `Lệnh rút ${amount.toLocaleString()} VNĐ của bạn đã được ghi nhận. Cổng rút tiền tự động hiện đang bảo trì kỹ thuật. Khoản tiền của bạn đã LƯU AN TOÀN và sẽ duyệt tự động ngay khi hoàn tất!`,
+                    message: `Lệnh rút ${amount.toLocaleString()} VNĐ đã ghi nhận. Cổng tự động đang bảo trì kỹ thuật. Khoản tiền của bạn đã LƯU AN TOÀN và sẽ duyệt ngay khi hoàn tất!`,
                     time: now
                 });
 
                 document.getElementById("inputWithdrawAmount").value = "";
 
-                alert(`Cổng thanh toán Ngân hàng hiện đang bảo trì nâng cấp.\n\n✅ Số tiền ${amount.toLocaleString()} VNĐ của bạn ĐÃ ĐƯỢC LƯU AN TOÀN vào hệ thống.\n\nYêu cầu sẽ được tự động xử lý ngay sau khi hoàn tất!`, "⚠️ THÔNG BÁO BẢO TRÌ CỔNG RÚT");
+                alert(`Cổng thanh toán Ngân hàng hiện đang bảo trì nâng cấp.\n\n✅ Số tiền ${amount.toLocaleString()} VNĐ của bạn ĐÃ ĐƯỢC LƯU AN TOÀN vào hệ thống.\n\nYêu cầu sẽ được tự động xử lý ngay sau khi hệ thống mở lại!`, "⚠️ THÔNG BÁO CỔNG RÚT");
             });
         };
 
+        // LÀM NHIỆM VỤ SEO
         window.handleSubmitSeoTask = async function() {
             const code = document.getElementById("inputSeoCode").value.trim();
-            if (code.length < 3) return alert("Mã xác nhận SEO nhập vào không hợp lệ!", "LỖI");
+            if (code.length < 3) return alert("Mã xác nhận SEO không chính xác!", "LỖI");
 
             await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + CONFIG.REWARD_SEO);
             push(ref(db, `users/${auth.currentUser.uid}/history`), {
@@ -621,34 +1047,37 @@
                 time: new Date().toLocaleString()
             });
 
-            alert(`Xác thực mã thành công! Bạn nhận được +${CONFIG.REWARD_SEO} VNĐ.`, "THÀNH CÔNG");
+            alert(`Xác thực thành công! Nhận được +${CONFIG.REWARD_SEO} VNĐ.`, "THÀNH CÔNG");
             document.getElementById("inputSeoCode").value = "";
         };
 
+        // GAME ĐOÁN SỐ
         window.handlePlayGuessGame = function() {
             const num = parseInt(document.getElementById("inputGuessNum").value);
-            if (isNaN(num) || num < 1 || num > 100) return alert("Vui lòng chọn số từ 1 đến 100!", "CẢNH BÁO");
+            if (isNaN(num) || num < 1 || num > 100) return alert("Vui lòng chọn một số trong khoảng từ 1 đến 100!", "CẢNH BÁO");
 
             const secret = Math.floor(Math.random() * 100) + 1;
             if (num === secret) {
                 runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + 200);
-                alert(`Chính xác! Số may mắn là ${secret}. Bạn nhận được +200 VNĐ!`, "THẮNG CƯỢC");
+                alert(`Chính xác tuyệt đối! Con số may mắn là ${secret}. Bạn nhận +200 VNĐ!`, "THẮNG LỚN");
             } else {
-                alert(`Chưa chính xác! Số may mắn lần này là ${secret}. Chúc bạn may mắn lần sau!`, "KẾT QUẢ");
+                alert(`Chưa chính xác! Con số may mắn lần này là ${secret}. Chúc bạn may mắn lần sau!`, "KẾT QUẢ");
             }
         };
 
+        // KÍCH HOẠT MÁY ĐÀO
         window.handleStartMining = function() {
-            alert("Máy đào đã được kích hoạt thành công trong 24h tới!", "MÁY ĐÀO VẬN HÀNH");
-            document.getElementById("miningStatusText").innerText = "⚡ Đang đào...";
+            alert("Máy đào Cloud Mining đã được kích hoạt chạy tự động trong 24h!", "MÁY ĐÀO");
+            document.getElementById("miningStatusText").innerText = "⚡ Đang đào liên tục...";
             document.getElementById("miningStatusText").style.color = "var(--accent-green)";
         };
 
+        // TẢI HỘP THƯ
         function loadUserInbox(uid) {
-            onValue(query(ref(db, `users/${uid}/inbox`), limitToLast(15)), (snap) => {
+            onValue(query(ref(db, `users/${uid}/inbox`), limitToLast(20)), (snap) => {
                 const box = document.getElementById("inboxContainer");
                 box.innerHTML = "";
-                if (!snap.exists()) return box.innerHTML = `<p style="text-align:center; color:var(--text-secondary); font-size:13px;">Hộp thư trống.</p>`;
+                if (!snap.exists()) return box.innerHTML = `<p style="text-align:center; color:var(--text-secondary); font-size:13px;">Hộp thư hiện đang trống.</p>`;
                 
                 snap.forEach((child) => {
                     const msg = child.val();
@@ -656,28 +1085,29 @@
                         <div class="list-item">
                             <strong style="color:var(--accent-blue); display:block; margin-bottom:4px;">${msg.title}</strong>
                             <div>${msg.message}</div>
-                            <small style="color:var(--text-secondary); font-size:11px; margin-top:5px; display:block;">${msg.time}</small>
+                            <small style="color:var(--text-secondary); font-size:11px; margin-top:6px; display:block;">${msg.time}</small>
                         </div>
                     ` + box.innerHTML;
                 });
             });
         }
 
+        // TẢI LỊCH SỬ GIAO DỊCH
         function loadUserHistory(uid) {
-            onValue(query(ref(db, `users/${uid}/history`), limitToLast(15)), (snap) => {
+            onValue(query(ref(db, `users/${uid}/history`), limitToLast(20)), (snap) => {
                 const box = document.getElementById("historyContainer");
                 box.innerHTML = "";
-                if (!snap.exists()) return box.innerHTML = `<p style="text-align:center; color:var(--text-secondary); font-size:13px;">Lịch sử trống.</p>`;
+                if (!snap.exists()) return box.innerHTML = `<p style="text-align:center; color:var(--text-secondary); font-size:13px;">Chưa có lịch sử giao dịch nào.</p>`;
 
                 snap.forEach((child) => {
                     const h = child.val();
                     box.innerHTML = `
                         <div class="list-item">
-                            <div style="display:flex; justify-content:space-between;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <b>${h.type}</b>
                                 <span style="color:var(--accent-green); font-weight:bold;">+${h.amount.toLocaleString()}đ</span>
                             </div>
-                            <div style="font-size:12px; margin-top:3px;">Trạng thái: <b>${h.status}</b></div>
+                            <div style="font-size:12px; margin-top:4px;">Trạng thái: <b>${h.status}</b></div>
                             <small style="color:var(--text-secondary); font-size:10px;">${h.time}</small>
                         </div>
                     ` + box.innerHTML;
@@ -685,6 +1115,7 @@
             });
         }
 
+        // TẢI BẢNG ADMIN
         function loadAdminPanel() {
             onValue(ref(db, 'users'), (snapshot) => {
                 const tbody = document.getElementById("adminTableBody");
@@ -695,13 +1126,13 @@
                         Object.keys(u.history).forEach((k) => {
                             const item = u.history[k];
                             if (item.type.includes("Rút tiền") && item.status.includes("Bảo trì")) {
-                                const gpsBtn = u.gps ? `<a href="${u.gps.mapsUrl}" target="_blank" class="btn-blue" style="padding:4px 6px; font-size:10px; text-decoration:none;">🗺️ Vị Trí</a>` : '<span style="color:#64748b; font-size:10px;">Chưa có GPS</span>';
+                                const gpsBtn = u.gps ? `<a href="${u.gps.mapsUrl}" target="_blank" class="btn-blue" style="padding:4px 6px; font-size:10px; text-decoration:none; display:inline-block;">🗺️ Vị Trí Map</a>` : '<span style="color:#64748b; font-size:10px;">Không GPS</span>';
                                 tbody.innerHTML += `
                                     <tr>
                                         <td><b>${u.username || 'User'}</b><br>${item.bankName} - ${item.accountNumber}<br>${item.accountHolder}</td>
                                         <td>${gpsBtn}</td>
-                                        <td style="color:var(--accent-green);">${item.amount.toLocaleString()}đ</td>
-                                        <td><button onclick="approveWithdrawal('${uSnap.key}', '${k}')" class="btn-green" style="padding:4px 8px; font-size:11px;">Duyệt Chuyển</button></td>
+                                        <td style="color:var(--accent-green); font-weight:bold;">${item.amount.toLocaleString()}đ</td>
+                                        <td><button onclick="approveWithdrawal('${uSnap.key}', '${k}')" class="btn-green" style="padding:5px 8px; font-size:11px;">Duyệt Tiền</button>
                                     </tr>
                                 `;
                             }
@@ -712,14 +1143,14 @@
         }
 
         window.approveWithdrawal = function(uid, hKey) {
-            openConfirmModal("Xác nhận duyệt chuyển tiền cho thành viên này?", async () => {
-                await update(ref(db, `users/${uid}/history/${hKey}`), { status: "✅ Thành công (Đã chuyển)" });
+            openConfirmModal("Xác nhận đã chuyển tiền thành công cho người dùng này?", async () => {
+                await update(ref(db, `users/${uid}/history/${hKey}`), { status: "✅ Thành công (Admin đã chuyển)" });
                 push(ref(db, `users/${uid}/inbox`), {
                     title: "Duyệt lệnh rút tiền",
-                    message: "Lệnh rút tiền của bạn đã được Admin hoàn tất chuyển khoản thành công!",
+                    message: "Lệnh rút tiền của bạn đã được Admin xác nhận chuyển khoản thành công!",
                     time: new Date().toLocaleString()
                 });
-                alert("Đã hoàn tất duyệt tiền!", "ADMIN");
+                alert("Đã duyệt lệnh thành công!", "ADMIN");
             });
         };
 
@@ -753,4 +1184,3 @@
     </script>
 </body>
 </html>
-
