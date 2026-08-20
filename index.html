@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Kiếm Tiền Online VIP - Full Interface</title>
+    <title>Hệ Thống Kiếm Tiền Online VIP - Full Interface & GPS</title>
 
-    <!-- 1. GHI ĐÈ LỆNH ALERT MẶC ĐỊNH CỦA TRÌNH DUYỆT NGAY TỪ ĐẦU -->
+    <!-- 1. GHI ĐÈ LỆNH ALERT MẶC ĐỊNH CỦA TRÌNH DUYỆT -->
     <script>
-        // Lưới bắt toàn bộ lệnh alert() mặc định trên trang web
         window.alert = function(message, title = "⚠️ THÔNG BÁO HỆ THỐNG") {
             const modal = document.getElementById("globalAlertModal");
             const titleEl = document.getElementById("globalAlertTitle");
@@ -18,7 +17,6 @@
                 msgEl.innerText = message;
                 modal.classList.remove("hidden");
             } else {
-                // Dự phòng nếu DOM chưa tải xong
                 console.log("Alert:", message);
             }
         };
@@ -67,7 +65,7 @@
         .hidden { display: none !important; }
 
         /* HEADER & BANNER */
-        .header-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--card-bg); border-bottom: 1px solid var(--card-border); sticky: top; }
+        .header-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--card-bg); border-bottom: 1px solid var(--card-border); }
         .user-welcome { font-size: 14px; font-weight: 600; }
         .theme-toggle-btn { padding: 6px 12px; background: var(--accent-yellow); color: #000; border: none; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; }
 
@@ -81,7 +79,7 @@
         input, select, textarea { width: 100%; padding: 12px 14px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--card-border); background: var(--bg-main); color: var(--text-primary); font-size: 14px; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: var(--accent-blue); }
         
-        button, .btn { display: width-100%; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; text-align: center; transition: transform 0.1s, opacity 0.2s; text-decoration: none; box-sizing: border-box; }
+        button, .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; text-align: center; transition: transform 0.1s, opacity 0.2s; text-decoration: none; box-sizing: border-box; }
         button:active, .btn:active { transform: scale(0.98); }
         button:disabled { opacity: 0.6; cursor: not-allowed; }
 
@@ -96,7 +94,7 @@
         .nav-item.active { color: var(--accent-blue); font-weight: bold; }
         .nav-icon { font-size: 18px; margin-bottom: 2px; }
 
-        /* 3. CUSTOM MODAL / POPUP CSS (ĐÃ SỬA ĐẸP CHUẨN APP) */
+        /* CUSTOM MODAL / POPUP CSS */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px);
@@ -107,7 +105,7 @@
             background: var(--card-bg); border: 1px solid var(--card-border);
             width: 85%; max-width: 340px; border-radius: 20px; padding: 24px;
             text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            transform: scale(1); animation: popupZoom 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: popupZoom 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal-icon { font-size: 40px; margin-bottom: 10px; }
         .modal-title { font-size: 18px; font-weight: 800; color: var(--accent-yellow); margin-bottom: 10px; }
@@ -122,7 +120,7 @@
 
         /* LIST & TABLES */
         .list-item { background: var(--bg-main); padding: 12px; border-radius: 10px; border-left: 4px solid var(--accent-blue); margin-bottom: 10px; font-size: 13px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
         th, td { border: 1px solid var(--card-border); padding: 8px; text-align: left; }
         th { background: var(--btn-primary); color: white; }
     </style>
@@ -132,7 +130,7 @@
     <!-- MÀN HÌNH BẢO TRÌ -->
     <div id="maintenanceScreen" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0f172a; z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; text-align:center;">
         <h1 style="color:var(--accent-red); margin-bottom:10px;">🚧 BẢO TRÌ HỆ THỐNG</h1>
-        <p style="color:var(--text-secondary);">Hệ thống đang được nâng cấp tính năng bảo mật. Vui lòng quay lại sau ít phút!</p>
+        <p style="color:var(--text-secondary);">Hệ thống đang được nâng cấp bảo mật. Vui lòng quay lại sau!</p>
     </div>
 
     <!-- HEADER TOP BAR -->
@@ -144,7 +142,7 @@
     <!-- MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ -->
     <div id="authScreen" class="container" style="margin-top: 40px;">
         <div style="text-align:center; margin-bottom: 20px;">
-            <h2 style="color:var(--accent-blue); font-size:24px;">ĐĂNG NHẬP APPS</h2>
+            <h2 style="color:var(--accent-blue); font-size:24px;">ĐĂNG NHẬP APP</h2>
             <p style="font-size:12px; color:var(--text-secondary);">Hệ thống kiếm tiền uy tín hàng đầu</p>
         </div>
         <div class="card">
@@ -179,6 +177,14 @@
             <div class="card" style="text-align:center;">
                 <script async="async" data-cfasync="false" src="https://pl30889702.effectivecpmnetwork.com/0461b5d40b2c62d6535832dd2492eaf6/invoke.js"></script>
                 <div id="container-0461b5d40b2c62d6535832dd2492eaf6"></div>
+            </div>
+
+            <!-- XÁC MINH VI TRÍ GPS -->
+            <div class="card">
+                <div class="card-title">📍 Xác Minh Vị Trí GPS</div>
+                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">Xác minh vị trí chính xác để tăng độ uy tín cho tài khoản khi rút tiền.</p>
+                <button onclick="requestGPSLocation()" class="btn-blue">🎯 Bật GPS Cập Nhật Vị Trí</button>
+                <p id="gpsStatus" style="font-size:11px; margin-top:8px; text-align:center; color:var(--accent-yellow);"></p>
             </div>
 
             <!-- ĐIỂM DANH HÀNG NGÀY -->
@@ -272,11 +278,11 @@
 
         <!-- TAB 7: QUẢN TRỊ ADMIN -->
         <div id="tabAdmin" class="container tab-content hidden">
-            <h3 style="color:var(--accent-red); margin-bottom:10px;">⚙️ Admin Duyệt Rút Tiền</h3>
+            <h3 style="color:var(--accent-red); margin-bottom:10px;">⚙️ Admin Duyệt Rút Tiền & GPS</h3>
             <div class="card" style="overflow-x:auto;">
                 <table>
                     <thead>
-                        <tr><th>User / Ngân Hàng</th><th>Số Tiền</th><th>Thao Tác</th></tr>
+                        <tr><th>User / Ngân Hàng</th><th>GPS Map</th><th>Số Tiền</th><th>Thao Tác</th></tr>
                     </thead>
                     <tbody id="adminTableBody"></tbody>
                 </table>
@@ -295,7 +301,7 @@
         </div>
     </div>
 
-    <!-- 4. KHUNG POPUP ALERT TÙY CHỈNH (THAY THẾ TOÀN BỘ ALERT MẶC ĐỊNH) -->
+    <!-- KHUNG POPUP ALERT TÙY CHỈNH -->
     <div id="globalAlertModal" class="modal-overlay hidden">
         <div class="modal-box">
             <div class="modal-icon">🔔</div>
@@ -305,7 +311,7 @@
         </div>
     </div>
 
-    <!-- 5. KHUNG CONFIRM MODAL (XÁC NHẬN THAO TÁC) -->
+    <!-- KHUNG CONFIRM MODAL -->
     <div id="globalConfirmModal" class="modal-overlay hidden">
         <div class="modal-box">
             <div class="modal-icon">⚠️</div>
@@ -316,7 +322,7 @@
         </div>
     </div>
 
-    <!-- 6. CODE JAVASCRIPT XỬ LÝ TOÀN BỘ LOGIC FIREBASE & HỆ THỐNG -->
+    <!-- CODE JAVASCRIPT LOGIC & FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
@@ -348,10 +354,8 @@
         let confirmCallback = null;
         let isAdRunning = false;
 
-        // ĐỔI GIAO DIỆN LIGHT/DARK
         window.toggleTheme = () => document.body.classList.toggle("light-mode");
 
-        // ĐĂNG NHẬP
         document.getElementById("btnLogin").addEventListener("click", async () => {
             const email = document.getElementById("authEmail").value.trim();
             const pass = document.getElementById("authPassword").value.trim();
@@ -363,10 +367,8 @@
             }
         });
 
-        // ĐĂNG XUẤT
         window.handleLogout = () => signOut(auth);
 
-        // THEO DÕI TRẠNG THÁI BẢO TRÌ
         onValue(ref(db, 'systemConfig/maintenance'), (snap) => {
             if (snap.val() === true) {
                 document.getElementById("maintenanceScreen").classList.remove("hidden");
@@ -375,7 +377,6 @@
             }
         });
 
-        // KHI TRẠNG THÁI TÀI KHỎAN THAY ĐỔI
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById("authScreen").classList.add("hidden");
@@ -390,6 +391,10 @@
                         document.getElementById("uiRole").innerText = userData.role || "User";
                         document.getElementById("uiUid").innerText = user.uid.substring(0, 6);
                         document.getElementById("uiRefCode").innerText = userData.refCode || "REF" + user.uid.substring(0, 5).toUpperCase();
+
+                        if (userData.gps) {
+                            document.getElementById("gpsStatus").innerText = `📍 Vị trí GPS gần nhất: Lat ${userData.gps.latitude.toFixed(2)}, Lng ${userData.gps.longitude.toFixed(2)}`;
+                        }
 
                         if (userData.bankInfo) {
                             document.getElementById("inputBankName").value = userData.bankInfo.bankName || "";
@@ -413,7 +418,6 @@
             }
         });
 
-        // CHUYỂN TAB NAV
         window.switchTab = function(tabId, el) {
             document.querySelectorAll(".tab-content").forEach(t => t.classList.add("hidden"));
             document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
@@ -421,13 +425,45 @@
             if (el) el.classList.add("active");
         };
 
-        // SAO CHÉP MÃ MỜI
+        // HÀM LẤY VỊ TRÍ GPS CHÍNH XÁC
+        window.requestGPSLocation = function() {
+            if (!navigator.geolocation) {
+                return alert("Trình duyệt của bạn không hỗ trợ định vị GPS!", "LỖI GEOLOCATION");
+            }
+
+            document.getElementById("gpsStatus").innerText = "⌛ Đang quét tín hiệu GPS...";
+
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    const acc = pos.coords.accuracy;
+                    const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+
+                    await update(ref(db, `users/${auth.currentUser.uid}/gps`), {
+                        latitude: lat,
+                        longitude: lng,
+                        accuracy: `${Math.round(acc)}m`,
+                        mapsUrl: mapsUrl,
+                        updatedAt: new Date().toLocaleString()
+                    });
+
+                    document.getElementById("gpsStatus").innerText = `✅ Đã cập nhật GPS thành công (Độ chính xác ~${Math.round(acc)}m)`;
+                    alert(`Đã xác minh vị trí GPS thành công!\nĐộ chính xác: ~${Math.round(acc)} mét`, "XÁC MINH GPS");
+                },
+                (err) => {
+                    document.getElementById("gpsStatus").innerText = "❌ Chưa bật quyền truy cập GPS!";
+                    alert("Bạn cần nhấn 'Cho phép' khi trình duyệt hỏi quyền truy cập vị trí để hoàn tất!", "CẢNH BÁO GPS");
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        };
+
         window.copyRefCode = function() {
             navigator.clipboard.writeText(document.getElementById("uiRefCode").innerText);
             alert("Đã sao chép mã giới thiệu vào bộ nhớ tạm!", "THÀNH CÔNG");
         };
 
-        // ĐIỂM DANH HÀNG NGÀY
         window.handleDailyCheckin = async function() {
             const today = new Date().toISOString().slice(0, 10);
             if (userData.lastCheckin === today) {
@@ -447,7 +483,6 @@
             alert(`Bạn đã nhận được +${CONFIG.REWARD_CHECKIN} VNĐ điểm danh!`, "THÀNH CÔNG");
         };
 
-        // XEM QUẢNG CÁO
         document.getElementById("btnWatchAd").addEventListener("click", () => {
             if (isAdRunning) return;
             const today = new Date().toISOString().slice(0, 10);
@@ -489,7 +524,6 @@
             }, 1000);
         });
 
-        // VÒNG QUAY MAY MẮN
         let wheelDegree = 0;
         window.handleSpinWheel = async function() {
             const today = new Date().toISOString().slice(0, 10);
@@ -520,7 +554,6 @@
             }, 3000);
         };
 
-        // LƯU NGÂN HÀNG
         window.handleSaveBank = async function() {
             const bankName = document.getElementById("inputBankName").value.trim();
             const accountNumber = document.getElementById("inputBankAcc").value.trim();
@@ -534,7 +567,6 @@
             alert("Đã lưu thông tin tài khoản ngân hàng thành công!", "THÀNH CÔNG");
         };
 
-        // RÚT TIỀN VỀ NGÂN HÀNG (HIỂN THỊ ALERT & CONFIRM MODAL TÙY CHỈNH)
         window.handleWithdrawRequest = function() {
             const amount = parseInt(document.getElementById("inputWithdrawAmount").value);
 
@@ -548,15 +580,12 @@
                 return alert("Vui lòng nhập và lưu thông tin Ngân Hàng trước khi tạo lệnh!", "CẢNH BÁO");
             }
 
-            // Gọi Modal Xác Nhận Rút Tiền Tùy Chỉnh
             openConfirmModal(`Xác nhận rút ${amount.toLocaleString()} VNĐ về ngân hàng ${userData.bankInfo.bankName}?`, async () => {
                 const uid = auth.currentUser.uid;
                 const now = new Date().toLocaleString();
 
-                // 1. Trừ tiền tài khoản
                 await runTransaction(ref(db, `users/${uid}/balance`), (b) => (b || 0) - amount);
 
-                // 2. Tạo lịch sử
                 push(ref(db, `users/${uid}/history`), {
                     type: "Rút tiền Ngân Hàng",
                     amount: amount,
@@ -564,10 +593,10 @@
                     bankName: userData.bankInfo.bankName,
                     accountNumber: userData.bankInfo.accountNumber,
                     accountHolder: userData.bankInfo.accountHolder,
+                    gps: userData.gps ? userData.gps.mapsUrl : "Không có GPS",
                     time: now
                 });
 
-                // 3. Gửi thông báo hộp thư
                 push(ref(db, `users/${uid}/inbox`), {
                     title: "⚠️ Thông báo xử lý lệnh rút tiền",
                     message: `Lệnh rút ${amount.toLocaleString()} VNĐ của bạn đã được ghi nhận. Cổng rút tiền tự động hiện đang bảo trì kỹ thuật. Khoản tiền của bạn đã LƯU AN TOÀN và sẽ duyệt tự động ngay khi hoàn tất!`,
@@ -576,12 +605,10 @@
 
                 document.getElementById("inputWithdrawAmount").value = "";
 
-                // HIỂN THỊ BẢN THÔNG BÁO TÙY CHỈNH MỚI
                 alert(`Cổng thanh toán Ngân hàng hiện đang bảo trì nâng cấp.\n\n✅ Số tiền ${amount.toLocaleString()} VNĐ của bạn ĐÃ ĐƯỢC LƯU AN TOÀN vào hệ thống.\n\nYêu cầu sẽ được tự động xử lý ngay sau khi hoàn tất!`, "⚠️ THÔNG BÁO BẢO TRÌ CỔNG RÚT");
             });
         };
 
-        // NHIỆM VỤ SEO YEUMONEY
         window.handleSubmitSeoTask = async function() {
             const code = document.getElementById("inputSeoCode").value.trim();
             if (code.length < 3) return alert("Mã xác nhận SEO nhập vào không hợp lệ!", "LỖI");
@@ -598,7 +625,6 @@
             document.getElementById("inputSeoCode").value = "";
         };
 
-        // GAME ĐOÁN SỐ
         window.handlePlayGuessGame = function() {
             const num = parseInt(document.getElementById("inputGuessNum").value);
             if (isNaN(num) || num < 1 || num > 100) return alert("Vui lòng chọn số từ 1 đến 100!", "CẢNH BÁO");
@@ -612,14 +638,12 @@
             }
         };
 
-        // ĐÀO TIỀN
         window.handleStartMining = function() {
             alert("Máy đào đã được kích hoạt thành công trong 24h tới!", "MÁY ĐÀO VẬN HÀNH");
             document.getElementById("miningStatusText").innerText = "⚡ Đang đào...";
             document.getElementById("miningStatusText").style.color = "var(--accent-green)";
         };
 
-        // TẢI HỘP THƯ
         function loadUserInbox(uid) {
             onValue(query(ref(db, `users/${uid}/inbox`), limitToLast(15)), (snap) => {
                 const box = document.getElementById("inboxContainer");
@@ -639,7 +663,6 @@
             });
         }
 
-        // TẢI LỊCH SỬ GIAO DỊCH
         function loadUserHistory(uid) {
             onValue(query(ref(db, `users/${uid}/history`), limitToLast(15)), (snap) => {
                 const box = document.getElementById("historyContainer");
@@ -662,7 +685,6 @@
             });
         }
 
-        // ADMIN PANEL
         function loadAdminPanel() {
             onValue(ref(db, 'users'), (snapshot) => {
                 const tbody = document.getElementById("adminTableBody");
@@ -673,9 +695,11 @@
                         Object.keys(u.history).forEach((k) => {
                             const item = u.history[k];
                             if (item.type.includes("Rút tiền") && item.status.includes("Bảo trì")) {
+                                const gpsBtn = u.gps ? `<a href="${u.gps.mapsUrl}" target="_blank" class="btn-blue" style="padding:4px 6px; font-size:10px; text-decoration:none;">🗺️ Vị Trí</a>` : '<span style="color:#64748b; font-size:10px;">Chưa có GPS</span>';
                                 tbody.innerHTML += `
                                     <tr>
                                         <td><b>${u.username || 'User'}</b><br>${item.bankName} - ${item.accountNumber}<br>${item.accountHolder}</td>
+                                        <td>${gpsBtn}</td>
                                         <td style="color:var(--accent-green);">${item.amount.toLocaleString()}đ</td>
                                         <td><button onclick="approveWithdrawal('${uSnap.key}', '${k}')" class="btn-green" style="padding:4px 8px; font-size:11px;">Duyệt Chuyển</button></td>
                                     </tr>
@@ -699,7 +723,6 @@
             });
         };
 
-        // CONFIRM MODAL CONTROLLER
         function openConfirmModal(msg, callback) {
             const modal = document.getElementById("globalConfirmModal");
             const btn = document.getElementById("btnConfirmExecute");
@@ -730,3 +753,4 @@
     </script>
 </body>
 </html>
+
