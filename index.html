@@ -4,14 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Kiếm Tiền Online</title>
-    
-    <!-- Adsterra Popunder Code -->
+
+    <!-- MÃ POPUNDER ADSTERRA -->
     <script type='text/javascript' src='//pl30841570.highrevenuesgate.com/beb08be9a75245ef134558730d851eab/invoke.js'></script>
-    
-    <!-- Firebase SDK (v9 Mod) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -34,14 +29,14 @@
 
     <!-- KHUNG ĐĂNG NHẬP / ĐĂNG KÝ -->
     <div id="authCard" class="card">
-        <h2 style="text-align: center; margin-top:0;">Đăng Nhập</h2>
+        <h2 style="text-align: center; margin-top:0;">Đăng Nhập System</h2>
         <input type="email" id="authEmail" placeholder="Email của bạn">
         <input type="password" id="authPassword" placeholder="Mật khẩu">
-        <button onclick="login()" class="btn-primary" style="margin-bottom: 8px;">Đăng Nhập</button>
-        <button onclick="register()" style="background:#6b7280; color:white;">Tạo Tài Khoản Mới</button>
+        <button id="btnLogin" class="btn-primary" style="margin-bottom: 8px;">Đăng Nhập</button>
+        <button id="btnRegister" style="background:#6b7280; color:white;">Tạo Tài Khoản Mới</button>
     </div>
 
-    <!-- GIAO DIỆN CHÍNH (Sau khi Đăng nhập) -->
+    <!-- GIAO DIỆN CHÍNH -->
     <div id="mainApp" class="hidden">
         
         <!-- Số dư -->
@@ -51,7 +46,7 @@
             <div id="userEmailDisplay" style="font-size: 12px; opacity: 0.8; margin-top:5px;"></div>
         </div>
 
-        <!-- Banner Adsterra -->
+        <!-- BANNER ADSTERRA -->
         <div class="card" style="text-align: center; padding: 10px; margin-top:15px;">
             <script type="text/javascript">
                 atOptions = { 'key' : '0461b5d40b2c62d6535832dd2492eaf6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
@@ -59,7 +54,7 @@
             <script type="text/javascript" src="//www.highrevenuesgate.com/0461b5d40b2c62d6535832dd2492eaf6/invoke.js"></script>
         </div>
 
-        <!-- Nhiệm vụ YeuMoney -->
+        <!-- NHIỆM VỤ YEUMONEY -->
         <div class="card">
             <h3 style="margin-top:0; color:#1f2937;">Nhiệm Vụ SEO (+100đ)</h3>
             <p style="font-size: 13px; color:#6b7280;">Bấm link bên dưới để vượt link lấy mã xác nhận:</p>
@@ -69,10 +64,10 @@
             </a>
             
             <input type="text" id="taskCode" placeholder="Dán mã nhận được vào đây...">
-            <button onclick="submitTask()" class="btn-success">Xác Nhận Nhận 100đ</button>
+            <button id="btnSubmitTask" class="btn-success">Xác Nhận Nhận 100đ</button>
         </div>
 
-        <!-- Chức năng Rút tiền -->
+        <!-- RÚT TIỀN -->
         <div class="card">
             <h3 style="margin-top:0; color:#1f2937;">Rút Tiền</h3>
             <select id="withdrawMethod">
@@ -82,45 +77,48 @@
             </select>
             <input type="text" id="withdrawAccount" placeholder="Số điện thoại / Số tài khoản">
             <input type="number" id="withdrawAmount" placeholder="Số tiền rút (Tối thiểu 10.000đ)">
-            <button onclick="requestWithdraw()" class="btn-primary">Gửi Yêu Cầu Rút Tiền</button>
+            <button id="btnWithdraw" class="btn-primary">Gửi Yêu Cầu Rút Tiền</button>
         </div>
 
-        <button onclick="logout()" style="background:#ef4444; color:white; margin-bottom:30px;">Đăng Xuất</button>
+        <button id="btnLogout" style="background:#ef4444; color:white; margin-bottom:30px;">Đăng Xuất</button>
     </div>
 
 </div>
 
-<script>
-    // 1. CẤU HÌNH FIREBASE (Thay thông số bên dưới bằng cấu hình Firebase của bạn nếu có)
+<!-- LOGIC XỬ LÝ FIREBASE MODULE -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+    import { getDatabase, ref, onValue, set, runTransaction, push, get } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
+
+    // CẤU HÌNH FIREBASE THẬT CỦA BẠN
     const firebaseConfig = {
-        apiKey: "AIzaSyDummyKeyForTemplate123456789",
-        authDomain: "app-kiem-tien.firebaseapp.com",
-        databaseURL: "https://app-kiem-tien-default-rtdb.firebaseio.com",
-        projectId: "app-kiem-tien",
-        storageBucket: "app-kiem-tien.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123456789:web:abc123def456"
+        apiKey: "AIzaSyC-9H_vpLYNh2xfwXmyHf6bmNubyAr6vjQ",
+        authDomain: "wed-26856.firebaseapp.com",
+        databaseURL: "https://wed-26856-default-rtdb.firebaseio.com",
+        projectId: "wed-26856",
+        storageBucket: "wed-26856.firebasestorage.app",
+        messagingSenderId: "1044067507339",
+        appId: "1:1044067507339:web:6c21fd80d16b1ccad4488e",
+        measurementId: "G-L9TVB8HL2D"
     };
 
-    // Khởi tạo Firebase
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const auth = firebase.auth();
-    const db = firebase.database();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
 
     let currentUser = null;
 
-    // 2. THEO DÕI TRẠNG THÁI ĐĂNG NHẬP
-    auth.onAuthStateChanged(user => {
+    // QUẢN LÝ TRẠNG THÁI ĐĂNG NHẬP
+    onAuthStateChanged(auth, (user) => {
         if (user) {
             currentUser = user;
             document.getElementById('authCard').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('userEmailDisplay').innerText = user.email;
-            
-            // Lắng nghe số dư thời gian thực từ Database
-            db.ref('users/' + user.uid + '/balance').on('value', snapshot => {
+
+            // Đồng bộ số dư thời gian thực
+            onValue(ref(db, 'users/' + user.uid + '/balance'), (snapshot) => {
                 const bal = snapshot.val() || 0;
                 document.getElementById('userBalance').innerText = bal.toLocaleString('vi-VN') + " đ";
             });
@@ -131,78 +129,83 @@
         }
     });
 
-    // 3. ĐĂNG KÝ / ĐĂNG NHẬP
-    function register() {
-        const email = document.getElementById('authEmail').value;
-        const pass = document.getElementById('authPassword').value;
-        auth.createUserWithEmailAndPassword(email, pass)
-            .then(cred => {
-                return db.ref('users/' + cred.user.uid).set({ balance: 0, email: email });
-            })
-            .catch(err => alert("Lỗi đăng ký: " + err.message));
-    }
+    // ĐĂNG KÝ
+    document.getElementById('btnRegister').addEventListener('click', async () => {
+        const email = document.getElementById('authEmail').value.trim();
+        const pass = document.getElementById('authPassword').value.trim();
+        if(!email || !pass) return alert("Nhập đầy đủ Email và Mật khẩu!");
 
-    function login() {
-        const email = document.getElementById('authEmail').value;
-        const pass = document.getElementById('authPassword').value;
-        auth.signInWithEmailAndPassword(email, pass)
-            .catch(err => alert("Lỗi đăng nhập: " + err.message));
-    }
-
-    function logout() {
-        auth.signOut();
-    }
-
-    // 4. XỬ LÝ NHIỆM VỤ
-    function submitTask() {
-        const code = document.getElementById('taskCode').value.trim();
-        if (code.length < 3) {
-            alert("Mã không hợp lệ!");
-            return;
+        try {
+            const cred = await createUserWithEmailAndPassword(auth, email, pass);
+            await set(ref(db, 'users/' + cred.user.uid), { balance: 0, email: email });
+            alert("Đăng ký thành công!");
+        } catch (err) {
+            alert("Lỗi đăng ký: " + err.message);
         }
+    });
 
-        // Tăng số dư +100đ vào CSDL Firebase
-        db.ref('users/' + currentUser.uid + '/balance').transaction(current => {
-            return (current || 0) + 100;
-        }).then(() => {
+    // ĐĂNG NHẬP
+    document.getElementById('btnLogin').addEventListener('click', async () => {
+        const email = document.getElementById('authEmail').value.trim();
+        const pass = document.getElementById('authPassword').value.trim();
+        if(!email || !pass) return alert("Nhập đầy đủ Email và Mật khẩu!");
+
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+        } catch (err) {
+            alert("Lỗi đăng nhập: " + err.message);
+        }
+    });
+
+    // ĐĂNG XUẤT
+    document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
+
+    // HOÀN THÀNH NHIỆM VỤ
+    document.getElementById('btnSubmitTask').addEventListener('click', async () => {
+        const code = document.getElementById('taskCode').value.trim();
+        if (code.length < 3) return alert("Mã không hợp lệ!");
+
+        try {
+            await runTransaction(ref(db, 'users/' + currentUser.uid + '/balance'), (b) => (b || 0) + 100);
             alert("✅ Xác nhận thành công! Bạn nhận được +100đ.");
             document.getElementById('taskCode').value = "";
-        });
-    }
+        } catch (err) {
+            alert("Lỗi cộng tiền: " + err.message);
+        }
+    });
 
-    // 5. XỬ LÝ RÚT TIỀN
-    function requestWithdraw() {
+    // RÚT TIỀN
+    document.getElementById('btnWithdraw').addEventListener('click', async () => {
         const method = document.getElementById('withdrawMethod').value;
         const account = document.getElementById('withdrawAccount').value.trim();
         const amount = parseInt(document.getElementById('withdrawAmount').value);
 
         if (!account || isNaN(amount) || amount < 10000) {
-            alert("Vui lòng nhập số tài khoản và số tiền tối thiểu 10.000đ!");
-            return;
+            return alert("Vui lòng nhập số tài khoản và số tiền rút tối thiểu 10.000đ!");
         }
 
-        db.ref('users/' + currentUser.uid + '/balance').get().then(snapshot => {
-            const currentBal = snapshot.val() || 0;
-            if (currentBal < amount) {
-                alert("Số dư của bạn không đủ!");
-            } else {
-                // Trừ tiền và tạo đơn rút tiền gửi cho Admin
-                db.ref('users/' + currentUser.uid + '/balance').set(currentBal - amount);
-                db.ref('withdrawRequests').push({
-                    uid: currentUser.uid,
-                    email: currentUser.email,
-                    method: method,
-                    account: account,
-                    amount: amount,
-                    timestamp: Date.now()
-                });
-                alert("🚀 Gửi yêu cầu rút tiền thành công! Admin sẽ xử lý trong 24h.");
-                document.getElementById('withdrawAccount').value = "";
-                document.getElementById('withdrawAmount').value = "";
-            }
-        });
-    }
+        const snapshot = await get(ref(db, 'users/' + currentUser.uid + '/balance'));
+        const currentBal = snapshot.val() || 0;
+
+        if (currentBal < amount) {
+            alert("Số dư của bạn không đủ!");
+        } else {
+            await set(ref(db, 'users/' + currentUser.uid + '/balance'), currentBal - amount);
+            await push(ref(db, 'withdrawRequests'), {
+                uid: currentUser.uid,
+                email: currentUser.email,
+                method: method,
+                account: account,
+                amount: amount,
+                timestamp: Date.now()
+            });
+            alert("🚀 Gửi yêu cầu rút tiền thành công!");
+            document.getElementById('withdrawAccount').value = "";
+            document.getElementById('withdrawAmount').value = "";
+        }
+    });
 </script>
 
 </body>
 </html>
+
