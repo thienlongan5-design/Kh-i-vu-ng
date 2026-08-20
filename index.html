@@ -3,41 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Kiếm Tiền Pro - Version 2026 Tối Ưu</title>
+    <title>App Kiếm Tiền Pro - Giao Diện Hiện Đại</title>
 
-    <!-- MÃ 1: POPUNDER ADSTERRA (CHẠY NGẦM TOÀN TRANG) -->
+    <!-- MÃ POPUNDER ADSTERRA -->
     <script src="https://pl30841570.effectivecpmnetwork.com/be/b0/8b/beb08be9a75245ef134558730d851eab.js"></script>
 
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --border-color: #334155; --primary: #3b82f6; }
         .light-mode { --bg-color: #f1f5f9; --card-bg: #ffffff; --text-color: #0f172a; --border-color: #cbd5e1; --primary: #2563eb; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding-bottom: 75px; transition: 0.3s; }
+        
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding-bottom: 75px; transition: 0.3s; }
         .container { padding: 15px; max-width: 500px; margin: 0 auto; box-sizing: border-box; }
         .hidden { display: none !important; }
         h2, h3 { color: #38bdf8; text-align: center; margin-top: 10px; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); box-sizing: border-box; font-size: 14px; }
-        button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 5px; transition: 0.3s; font-size: 14px; }
-        button:hover { opacity: 0.9; }
+        
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); box-sizing: border-box; font-size: 14px; outline: none; }
+        input:focus { border-color: var(--primary); }
+        
+        button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 5px; transition: 0.2s; font-size: 14px; }
+        button:active { transform: scale(0.98); }
         button:disabled { background: #475569; cursor: not-allowed; }
+        
         .btn-danger { background: #ef4444; } .btn-warning { background: #f59e0b; color: #000; } .btn-success { background: #10b981; } 
-        .btn-task { display: block; text-align: center; background: #f59e0b; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 10px; }
-        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--border-color); }
+        .btn-task { display: block; text-align: center; background: #f59e0b; color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; margin-bottom: 10px; }
+        .card { background: var(--card-bg); padding: 16px; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 1px solid var(--border-color); }
         .admin-name { color: #ef4444 !important; font-weight: bold; text-transform: uppercase; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 100; }
-        .nav-item { color: #94a3b8; text-align: center; cursor: pointer; font-size: 10px; flex: 1; transition: 0.2s; }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 100; backdrop-filter: blur(10px); }
+        .nav-item { color: #94a3b8; text-align: center; cursor: pointer; font-size: 11px; flex: 1; transition: 0.2s; }
         .nav-item.active { color: #38bdf8; font-weight: bold; transform: translateY(-2px); }
-        .msg-box, .history-item { background: var(--bg-color); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #38bdf8; font-size: 13px; }
+        
+        .msg-box, .history-item { background: var(--bg-color); padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #38bdf8; font-size: 13px; }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--card-bg); padding: 20px; border-radius: 12px; width: 85%; max-width: 350px; text-align: center; border: 1px solid var(--border-color); }
+        
         table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
-        th, td { border: 1px solid var(--border-color); padding: 6px; text-align: left; }
+        th, td { border: 1px solid var(--border-color); padding: 8px; text-align: left; }
         th { background: var(--primary); color: white; }
-        #maintenanceScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; padding: 20px;}
+        #maintenanceScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; padding: 20px; }
+
+        /* DESIGN POPUP THÔNG BÁO TÙY CHỈNH (CUSTOM POPUP) */
+        .custom-popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 99999; animation: fadeIn 0.2s ease-in-out;
+        }
+        .custom-popup-card {
+            background: var(--card-bg); color: var(--text-color);
+            padding: 22px; border-radius: 20px; width: 85%; max-width: 340px;
+            text-align: center; border: 1px solid var(--border-color);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5); transform: scale(0.9);
+            animation: popupScale 0.2s forwards;
+        }
+        .custom-popup-title { font-size: 17px; font-weight: bold; margin-bottom: 12px; color: #f59e0b; }
+        .custom-popup-msg { font-size: 14px; line-height: 1.5; margin-bottom: 20px; color: var(--text-color); white-space: pre-line; word-break: break-word; }
+        .custom-popup-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px; }
+        
+        @keyframes popupScale { to { transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <!-- MÀN HÌNH BẢO TRÌ SYSTEM -->
     <div id="maintenanceScreen" class="hidden">
         <h1 style="color:#ef4444;">🚧 HỆ THỐNG ĐANG BẢO TRÌ</h1>
         <p>Hệ thống đang được nâng cấp bảo mật. Vui lòng quay lại sau!</p>
@@ -67,10 +95,10 @@
         <div id="tabHome" class="container tab-content">
             <div class="card">
                 <p>Vai trò: <span id="uiRole">...</span></p>
-                <p>Số dư ví: <strong style="color:#10b981; font-size:22px;" id="uiBalance">0</strong> VNĐ</p>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 6px; font-size: 12px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <p>Số dư ví: <strong style="color:#10b981; font-size:24px;" id="uiBalance">0</strong> VNĐ</p>
+                <div style="background: var(--bg-color); padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
                     <span>Mã giới thiệu: <b id="uiRefCode" style="color:#38bdf8;">...</b></span>
-                    <button onclick="copyRef()" style="width: auto; padding: 5px 10px; font-size: 11px;">📋 Sao chép</button>
+                    <button onclick="copyRef()" style="width: auto; padding: 6px 12px; font-size: 11px;">📋 Sao chép</button>
                 </div>
             </div>
 
@@ -106,7 +134,7 @@
                 <div id="adStatus" style="margin-top:10px; color:#10b981; font-size:13px; text-align:center; font-weight:bold;"></div>
             </div>
 
-            <!-- RÚT TIỀN (VỚI TÍNH NĂNG BẢO TRÌ BẢO VỆ DỮ LIỆU) -->
+            <!-- RÚT TIỀN -->
             <div class="card">
                 <h3>Rút Tiền & Ngân Hàng</h3>
                 <input type="text" id="bankName" placeholder="Tên Ngân Hàng (MB, VCB...)">
@@ -130,21 +158,6 @@
                 <input type="number" id="guessInput" placeholder="Số từ 1 - 100..." style="text-align:center;">
                 <button onclick="playGuessGame()" class="btn-success">🎯 Mở Thưởng (20đ)</button>
                 <p id="guessHint" style="font-size: 13px; font-weight: bold; margin-top: 5px; color:#38bdf8;"></p>
-                <button id="btnGetGuessAd" onclick="watchAdForMoreGuesses()" class="btn-warning hidden">📺 Xem QC nhận +3 lượt</button>
-            </div>
-
-            <div class="card" style="text-align: center;">
-                <h3>🐍 Rắn Săn Mồi Tích Điểm</h3>
-                <canvas id="snakeCanvas" width="240" height="240" style="background:#000; border:2px solid #38bdf8; margin:0 auto; border-radius:6px;"></canvas>
-                <p style="margin-top:5px;">Điểm: <b id="snakeScoreText" style="color:#10b981;">0</b></p>
-                <div style="margin: 5px 0;">
-                    <button onclick="changeSnakeDir('UP')" style="width:45px; padding:6px;">⬆️</button><br>
-                    <button onclick="changeSnakeDir('LEFT')" style="width:45px; padding:6px;">⬅️</button>
-                    <button onclick="changeSnakeDir('DOWN')" style="width:45px; padding:6px;">⬇️</button>
-                    <button onclick="changeSnakeDir('RIGHT')" style="width:45px; padding:6px;">➡️</button>
-                </div>
-                <button id="btnStartSnake" onclick="startSnakeGame()" class="btn-warning">🚀 Bắt Đầu Chơi</button>
-                <button id="btnReviveSnake" onclick="watchAdToPlaySnake()" class="btn-success hidden">📺 Xem QC để hồi sinh</button>
             </div>
         </div>
 
@@ -165,18 +178,9 @@
             <div class="card">
                 <h3>Nhiệm Vụ SEO YeuMoney (+250đ)</h3>
                 <p style="font-size: 12px; color: #cbd5e1;">Bấm link bên dưới để vượt link lấy mã xác nhận:</p>
-                
-                <a href="https://yeumoney.com/oWCXUIOwBc5" target="_blank" class="btn-task">
-                    🔗 LẤY MÃ SEO YEUMONEY
-                </a>
-                
+                <a href="https://yeumoney.com/oWCXUIOwBc5" target="_blank" class="btn-task">🔗 LẤY MÃ SEO YEUMONEY</a>
                 <input type="text" id="seoCodeInput" placeholder="Dán mã lấy được vào đây...">
                 <button onclick="submitSeoTask()" class="btn-success">Xác Nhận Nhận 250đ</button>
-            </div>
-            <div class="card">
-                <h3>📖 Đọc Tin Tức</h3>
-                <p style="font-size: 12px;">Đọc bài viết 15s tích lũy điểm thưởng.</p>
-                <button id="btnReadNews" onclick="startReadingNews()" class="btn-warning">📖 Đọc bài (15s) nhận 10đ</button>
             </div>
         </div>
 
@@ -218,13 +222,22 @@
         </div>
     </div>
 
-    <!-- MODAL XÁC NHẬN -->
-    <div id="confirmModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h3 style="color:#f59e0b;">XÁC NHẬN GIAO DỊCH</h3>
-            <p id="confirmText" style="font-size:14px; margin: 15px 0;"></p>
+    <!-- KHUNG POPUP THÔNG BÁO TỰ TẠO (THAY THẾ ALERT MẶC ĐỊNH) -->
+    <div id="customAlertModal" class="custom-popup-overlay hidden">
+        <div class="custom-popup-card">
+            <div id="customAlertTitle" class="custom-popup-title">⚠️ THÔNG BÁO</div>
+            <div id="customAlertMsg" class="custom-popup-msg">Nội dung thông báo...</div>
+            <button onclick="closeCustomAlert()" class="custom-popup-btn">Đồng Ý</button>
+        </div>
+    </div>
+
+    <!-- KHUNG MODAL XÁC NHẬN (CONFIRM) -->
+    <div id="confirmModal" class="custom-popup-overlay hidden">
+        <div class="custom-popup-card">
+            <div class="custom-popup-title" style="color:#f59e0b;">XÁC NHẬN GIAO DỊCH</div>
+            <div id="confirmText" class="custom-popup-msg">Nội dung xác nhận...</div>
             <button id="btnConfirmAction" class="btn-danger" disabled>Xác nhận (3s)</button>
-            <button onclick="closeConfirmModal()" style="background:#475569; margin-top:8px;">Hủy</button>
+            <button onclick="closeConfirmModal()" style="background:#475569; margin-top:8px;">Hủy Bỏ</button>
         </div>
     </div>
 
@@ -258,6 +271,16 @@
         let currentUserData = null;
         let actionCallback = null;
         let isWatchingAd = false;
+
+        // HÀM HIỂN THỊ POPUP THÔNG BÁO THAY CHO ALERT()
+        window.showAlert = function(msg, title = "⚠️ THÔNG BÁO") {
+            document.getElementById("customAlertTitle").innerText = title;
+            document.getElementById("customAlertMsg").innerText = msg;
+            document.getElementById("customAlertModal").classList.remove("hidden");
+        }
+        window.closeCustomAlert = function() {
+            document.getElementById("customAlertModal").classList.add("hidden");
+        }
 
         window.toggleTheme = () => document.body.classList.toggle("light-mode");
 
@@ -320,13 +343,13 @@
 
         window.copyRef = function() {
             navigator.clipboard.writeText(document.getElementById("uiRefCode").innerText);
-            alert("Đã sao chép mã!");
+            showAlert("Đã sao chép mã giới thiệu vào bộ nhớ tạm!", "THÀNH CÔNG");
         }
 
-        // XỬ LÝ NHIỆM VỤ SEO YEUMONEY (250 VNĐ)
+        // XỬ LÝ NHIỆM VỤ SEO YEUMONEY
         window.submitSeoTask = async function() {
             const code = document.getElementById("seoCodeInput").value.trim();
-            if (code.length < 3) return alert("Mã không hợp lệ hoặc quá ngắn!");
+            if (code.length < 3) return showAlert("Mã nhập vào không hợp lệ hoặc quá ngắn!", "LỖI");
 
             const uid = auth.currentUser.uid;
             await runTransaction(ref(db, `users/${uid}/balance`), (b) => (b || 0) + PROFIT_CONFIG.REWARD_SEO);
@@ -336,7 +359,7 @@
                 status: "Thành công", 
                 time: new Date().toLocaleString() 
             });
-            alert("✅ Hoàn thành nhiệm vụ SEO! Bạn nhận được +250 VNĐ.");
+            showAlert("✅ Hoàn thành nhiệm vụ SEO! Bạn nhận được +250 VNĐ.", "THÀNH CÔNG");
             document.getElementById("seoCodeInput").value = "";
         }
 
@@ -347,7 +370,7 @@
             const userAdStats = currentUserData.adStats || { date: today, count: 0 };
             
             if (userAdStats.date === today && userAdStats.count >= PROFIT_CONFIG.MAX_DAILY_ADS) {
-                return alert(`Bạn đã xem hết giới hạn ${PROFIT_CONFIG.MAX_DAILY_ADS} QC hôm nay!`);
+                return showAlert(`Bạn đã xem hết giới hạn ${PROFIT_CONFIG.MAX_DAILY_ADS} quảng cáo hôm nay!`, "THÔNG BÁO");
             }
 
             isWatchingAd = true;
@@ -355,7 +378,7 @@
             const status = document.getElementById("adStatus");
             
             btn.disabled = true;
-            status.innerText = "Đang xem quảng cáo Popunder...";
+            status.innerText = "Đang mở quảng cáo...";
 
             let timeLeft = 10;
             const interval = setInterval(async () => {
@@ -379,12 +402,12 @@
         // ĐIỂM DANH
         window.dailyCheckIn = async function() {
             const today = new Date().toISOString().slice(0, 10);
-            if (currentUserData.lastCheckin === today) return alert("Hôm nay bạn đã điểm danh rồi!");
+            if (currentUserData.lastCheckin === today) return showAlert("Hôm nay bạn đã điểm danh rồi! Hãy quay lại vào ngày mai.", "THÔNG BÁO");
 
             await update(ref(db, `users/${auth.currentUser.uid}`), { lastCheckin: today });
             await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + 50);
             push(ref(db, `users/${auth.currentUser.uid}/history`), { type: "Điểm danh", amount: 50, status: "Thành công", time: new Date().toLocaleString() });
-            alert("Điểm danh thành công +50 VNĐ!");
+            showAlert("Điểm danh thành công! Bạn nhận được +50 VNĐ.", "THÀNH CÔNG");
         }
 
         // VÒNG QUAY MAY MẮN
@@ -395,8 +418,7 @@
             if (spinData.date !== today) spinData = { date: today, count: 3 };
 
             if (spinData.count <= 0) {
-                document.getElementById("btnGetSpinAd").classList.remove("hidden");
-                return alert("Hết lượt quay! Xem QC để lấy thêm.");
+                return showAlert("Bạn đã hết lượt quay hôm nay!", "THÔNG BÁO");
             }
 
             spinData.count -= 1;
@@ -414,8 +436,8 @@
                 if (rewardMoney > 0) {
                     await runTransaction(ref(db, `users/${auth.currentUser.uid}/balance`), (b) => (b || 0) + rewardMoney);
                     push(ref(db, `users/${auth.currentUser.uid}/history`), { type: "Vòng quay", amount: rewardMoney, status: "Thành công", time: new Date().toLocaleString() });
-                    alert(`Trúng ${rewardMoney} VNĐ!`);
-                } else alert("Chúc bạn may mắn lần sau!");
+                    showAlert(`Chúc mừng! Bạn đã trúng ${rewardMoney} VNĐ.`, "KẾT QUẢ VÒNG QUAY");
+                } else showAlert("Chúc bạn may mắn lần sau!", "KẾT QUẢ VÒNG QUAY");
             }, 3000);
         }
 
@@ -424,54 +446,54 @@
             const bankName = document.getElementById("bankName").value.trim();
             const accountNumber = document.getElementById("bankNumber").value.trim();
             const accountHolder = document.getElementById("bankHolder").value.trim().toUpperCase();
-            if(!bankName || !accountNumber || !accountHolder) return alert("Điền đủ thông tin!");
+            if(!bankName || !accountNumber || !accountHolder) return showAlert("Vui lòng điền đầy đủ thông tin ngân hàng!", "LỖI");
             await update(ref(db, 'users/' + auth.currentUser.uid + '/bankInfo'), { bankName, accountNumber, accountHolder });
-            alert("Đã lưu ngân hàng!");
+            showAlert("Đã lưu thông tin tài khoản ngân hàng thành công!", "THÀNH CÔNG");
         }
 
-        // HÀM RÚT TIỀN: THÔNG BÁO BẢO TRÌ VÀ LƯU SỐ TIỀN AN TOÀN
+        // HÀM RÚT TIỀN (SỬ DỤNG CUSTOM POPUP)
         window.requestWithdraw = async function() {
             const amount = parseInt(document.getElementById("withdrawAmount").value);
             
             if(isNaN(amount) || amount < PROFIT_CONFIG.MIN_WITHDRAW) {
-                return alert(`Rút tối thiểu ${PROFIT_CONFIG.MIN_WITHDRAW.toLocaleString()} VNĐ!`);
+                return showAlert(`Rút tối thiểu ${PROFIT_CONFIG.MIN_WITHDRAW.toLocaleString()} VNĐ!`, "RÚT TIỀN THẤT BẠI");
             }
             if(amount > currentUserData.balance) {
-                return alert("Số dư không đủ!");
+                return showAlert("Số dư ví không đủ để thực hiện giao dịch!", "RÚT TIỀN THẤT BẠI");
             }
             if(!currentUserData.bankInfo) {
-                return alert("Vui lòng lưu thông tin ngân hàng trước!");
+                return showAlert("Vui lòng lưu thông tin ngân hàng trước khi rút tiền!", "LỖI");
             }
 
-            openConfirmModal(`Gửi yêu cầu rút ${amount.toLocaleString()} VNĐ?`, async () => {
+            openConfirmModal(`Bạn có chắc chắn muốn gửi yêu cầu rút ${amount.toLocaleString()} VNĐ?`, async () => {
                 const uid = auth.currentUser.uid;
                 const nowTime = new Date().toLocaleString();
 
-                // 1. Trừ số dư trên giao diện để ghi nhận lệnh rút
+                // 1. Trừ số dư ví
                 await runTransaction(ref(db, `users/${uid}/balance`), (b) => (b || 0) - amount);
 
-                // 2. Ghi lịch sử giao dịch rõ ràng
+                // 2. Ghi lịch sử giao dịch
                 push(ref(db, `users/${uid}/history`), { 
                     type: "Rút tiền Ngân Hàng", 
                     amount: amount, 
-                    status: "⏳ Đã ghi nhận (Kênh rút tiền bảo trì)", 
+                    status: "⏳ Đã ghi nhận (Cổng rút tiền bảo trì)", 
                     bankName: currentUserData.bankInfo.bankName,
                     accountNumber: currentUserData.bankInfo.accountNumber,
                     accountHolder: currentUserData.bankInfo.accountHolder,
                     time: nowTime 
                 });
 
-                // 3. Gửi thông báo chi tiết vào Hộp thư cá nhân
+                // 3. Gửi thông báo vào Hộp thư cá nhân
                 push(ref(db, `users/${uid}/inbox`), {
                     title: "⚠️ Thông báo bảo trì kênh rút tiền",
-                    message: `Hệ thống đã ghi nhận thành công lệnh rút ${amount.toLocaleString()} VNĐ của bạn. Cổng thanh toán tự động đang được bảo trì kỹ thuật. Số tiền của bạn đã được LƯU AN TOÀN và sẽ xử lý ngay khi hoàn tất nâng cấp!`,
+                    message: `Hệ thống đã ghi nhận thành công lệnh rút ${amount.toLocaleString()} VNĐ của bạn. Cổng thanh toán tự động đang bảo trì nâng cấp. Số tiền của bạn đã được LƯU AN TOÀN và sẽ xử lý ngay khi hoàn tất!`,
                     time: nowTime
                 });
 
                 document.getElementById("withdrawAmount").value = "";
 
-                // 4. Hiển thị Alert rõ ràng thông báo cho người dùng
-                alert(`⚠️ THÔNG BÁO HỆ THỐNG:\n\nKênh rút tiền hiện đang bảo trì nâng cấp.\n\n✅ Số tiền ${amount.toLocaleString()} VNĐ của bạn ĐÃ ĐƯỢC GHI NHẬN AN TOÀN vào hệ thống và lưu trong Lịch Sử Giao Dịch.\n\nYêu cầu sẽ được xử lý ngay sau khi khắc phục xong sự cố bảo trì. Cảm ơn bạn đã kiên nhẫn!`);
+                // 4. Bật Popup đẹp thông báo bảo trì
+                showAlert(`Cổng thanh toán Ngân hàng hiện đang bảo trì kỹ thuật.\n\n✅ Số tiền ${amount.toLocaleString()} VNĐ của bạn ĐÃ ĐƯỢC GHI NHẬN AN TOÀN vào hệ thống.\n\nYêu cầu sẽ tự động xử lý ngay sau khi sự cố khắc phục xong!`, "⚠️ THÔNG BÁO BẢO TRÌ");
             });
         }
 
@@ -525,10 +547,10 @@
         }
 
         window.approveWithdraw = function(userId, historyKey) {
-            openConfirmModal("Xác nhận bạn đã bank tiền cho khách?", async () => {
+            openConfirmModal("Xác nhận bạn đã chuyển khoản cho thành viên này?", async () => {
                 await update(ref(db, `users/${userId}/history/${historyKey}`), { status: "✅ Thành công (Đã chuyển khoản)" });
                 push(ref(db, `users/${userId}/inbox`), { title: "Chuyển khoản thành công", message: "Admin đã hoàn tất chuyển khoản số tiền rút của bạn!", time: new Date().toLocaleString() });
-                alert("Đã duyệt!");
+                showAlert("Đã duyệt thanh toán!", "ADMIN");
             });
         }
 
