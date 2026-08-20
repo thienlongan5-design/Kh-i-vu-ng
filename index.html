@@ -4,82 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiếm Tiền Online</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root { --primary: #2ecc71; --dark: #2c3e50; --light: #f4f7f6; }
-        body { font-family: 'Poppins', sans-serif; background: var(--light); margin: 0; padding-bottom: 70px; }
-        .header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
-        .balance-box { font-size: 24px; font-weight: bold; margin-top: 10px; }
-        .tab-content { display: none; padding: 20px; }
-        .tab-content.active { display: block; }
-        .card { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
-        .nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: white; padding: 10px 0; border-top: 1px solid #ddd; }
-        .nav div { text-align: center; font-size: 12px; cursor: pointer; }
-    </style>
-    <!-- ADSTERRA ADS HEAD -->
+    <!-- Adsterra Popunder Code -->
     <script type='text/javascript' src='//pl30841570.highrevenuesgate.com/beb08be9a75245ef134558730d851eab/invoke.js'></script>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; padding: 15px; margin: 0; }
+        .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .balance { font-size: 24px; font-weight: bold; color: #2ecc71; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-success { width: 100%; padding: 12px; background: #2ecc71; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
 </head>
 <body>
 
-    <div class="header">
-        <div>Số dư của bạn</div>
-        <div class="balance-box" id="balance">0 đ</div>
+    <!-- Số dư -->
+    <div class="card">
+        <div style="text-align: center; color: #666;">Số dư của bạn</div>
+        <div class="balance" id="balanceDisplay">0 đ</div>
     </div>
 
-    <!-- TAB: TRANG CHỦ -->
-    <div id="tab-home" class="tab-content active">
-        <div class="card">
-            <h3>Chào mừng trở lại!</h3>
-            <p>Hãy hoàn thành nhiệm vụ để nhận tiền mỗi ngày.</p>
-        </div>
-        <div id="container-banner-ad">
-            <script type='text/javascript' src='//pl30889702.highrevenuesgate.com/0461b5d40b2c62d6535832dd2492eaf6/invoke.js'></script>
-        </div>
+    <!-- Adsterra Banner Code -->
+    <div class="card" style="text-align: center;">
+        <script type="text/javascript">
+            atOptions = { 'key' : '0461b5d40b2c62d6535832dd2492eaf6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="//www.highrevenuesgate.com/0461b5d40b2c62d6535832dd2492eaf6/invoke.js"></script>
     </div>
 
-    <!-- TAB: NHIỆM VỤ -->
-    <div id="tab-task" class="tab-content">
-        <div class="card">
-            <h3>Nhiệm Vụ Nhận 100đ</h3>
-            <p>Bước 1: Bấm lấy mã</p>
-            <a href="https://yeumoney.com/oWCXUIOwBc5" target="_blank" class="btn" style="text-decoration: none; display: block; text-align: center;">🔗 LẤY MÃ SEO</a>
-            <p style="margin-top:15px;">Bước 2: Dán mã vào ô dưới</p>
-            <input type="text" id="seoCode" placeholder="Dán mã tại đây..." style="width:100%; padding:10px; box-sizing:border-box; margin-bottom:10px;">
-            <button onclick="checkTask()" class="btn">XÁC NHẬN NHẬN 100đ</button>
-        </div>
-    </div>
-
-    <!-- TAB: RÚT TIỀN -->
-    <div id="tab-withdraw" class="tab-content">
-        <div class="card">
-            <h3>Rút tiền về Momo</h3>
-            <input type="text" placeholder="Số điện thoại Momo" style="width:100%; padding:10px; margin-bottom:10px;">
-            <button class="btn" style="background:#3498db;">Yêu cầu rút tiền</button>
-        </div>
-    </div>
-
-    <!-- NAVIGATION -->
-    <div class="nav">
-        <div onclick="showTab('tab-home')">🏠<br>Trang chủ</div>
-        <div onclick="showTab('tab-task')">🎯<br>Nhiệm vụ</div>
-        <div onclick="showTab('tab-withdraw')">💰<br>Rút tiền</div>
+    <!-- Nhiệm vụ YeuMoney -->
+    <div class="card">
+        <h3>Nhiệm Vụ Nhận 100đ</h3>
+        <p style="font-size: 13px;">Bấm link, vượt link lấy mã rồi dán vào đây:</p>
+        <a href="https://yeumoney.com/oWCXUIOwBc5" target="_blank" style="display:block; padding:12px; background:#f59e0b; color:#fff; text-align:center; border-radius:8px; text-decoration:none; font-weight:bold;">
+            🔗 LẤY MÃ SEO TẠI ĐÂY
+        </a>
+        <input type="text" id="seoCodeInput" placeholder="Dán mã vào đây...">
+        <button onclick="submitSeoTask()" class="btn-success">Xác Nhận Nhận 100đ</button>
     </div>
 
     <script>
+        // Logic đơn giản (Bạn có thể kết nối Firebase vào đây sau)
         let balance = 0;
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-        }
-        function checkTask() {
-            let code = document.getElementById('seoCode').value;
-            if (code.length > 3) {
+        function submitSeoTask() {
+            let code = document.getElementById('seoCodeInput').value;
+            if(code.length > 3) {
                 balance += 100;
-                document.getElementById('balance').innerText = balance + " đ";
-                alert("Chúc mừng! Bạn đã nhận được 100đ");
+                document.getElementById('balanceDisplay').innerText = balance + " đ";
+                alert("Chúc mừng! Bạn đã nhận 100đ.");
+                document.getElementById('seoCodeInput').value = "";
             } else {
-                alert("Mã không hợp lệ!");
+                alert("Mã không hợp lệ hoặc quá ngắn!");
             }
         }
     </script>
