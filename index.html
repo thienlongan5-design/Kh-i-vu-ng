@@ -74,7 +74,7 @@
                 </div>
             </div>
 
-            <!-- MÃ 2: BANNER ADSTERRA ĐẶT ĐẦU TRANG CHỦ KHAI THÁC CPM -->
+            <!-- BANNER ADSTERRA -->
             <div class="card" style="text-align: center;">
                 <script async="async" data-cfasync="false" src="https://pl30889702.effectivecpmnetwork.com/0461b5d40b2c62d6535832dd2492eaf6/invoke.js"></script>
                 <div id="container-0461b5d40b2c62d6535832dd2492eaf6"></div>
@@ -99,14 +99,14 @@
                 <button id="btnGetSpinAd" onclick="watchAdForSpin()" class="btn-success hidden" style="margin-top: 5px;">📺 Xem QC nhận +1 lượt quay</button>
             </div>
 
-            <!-- NÚT XEM QUẢNG CÁO KIẾM TIỀN (20 VNĐ) -->
+            <!-- XEM QUẢNG CÁO -->
             <div class="card">
                 <h3>Xem Quảng Cáo Thường</h3>
                 <button id="btnWatchAd" class="btn-warning">📺 Xem QC Nhận 20 VNĐ</button>
                 <div id="adStatus" style="margin-top:10px; color:#10b981; font-size:13px; text-align:center; font-weight:bold;"></div>
             </div>
 
-            <!-- RÚT TIỀN (ĐÃ HẠ MỐC XUỐNG 10.000 VNĐ) -->
+            <!-- RÚT TIỀN (VỚI TÍNH NĂNG BẢO TRÌ BẢO VỆ DỮ LIỆU) -->
             <div class="card">
                 <h3>Rút Tiền & Ngân Hàng</h3>
                 <input type="text" id="bankName" placeholder="Tên Ngân Hàng (MB, VCB...)">
@@ -166,7 +166,6 @@
                 <h3>Nhiệm Vụ SEO YeuMoney (+250đ)</h3>
                 <p style="font-size: 12px; color: #cbd5e1;">Bấm link bên dưới để vượt link lấy mã xác nhận:</p>
                 
-                <!-- LINK YEUMONEY THẬT CỦA BẠN -->
                 <a href="https://yeumoney.com/oWCXUIOwBc5" target="_blank" class="btn-task">
                     🔗 LẤY MÃ SEO YEUMONEY
                 </a>
@@ -235,13 +234,12 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
         import { getDatabase, ref, get, set, update, push, onValue, runTransaction, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 
-        // CẤU HÌNH KINH TẾ MỚI TỐI ƯU CẢ USER LẪN ADMIN
         const PROFIT_CONFIG = {
-            REWARD_AD: 20,           // Xem QC nhận 20 VNĐ
-            REWARD_SEO: 250,         // Vượt link SEO nhận 250 VNĐ (Kích thích mạnh)
-            REWARD_NEWS: 10,          // Đọc báo nhận 10 VNĐ
-            MIN_WITHDRAW: 10000,     // Rút tiền tối thiểu chỉ 10.000 VNĐ
-            MAX_DAILY_ADS: 20        // Giới hạn 20 QC/ngày
+            REWARD_AD: 20,           
+            REWARD_SEO: 250,         
+            REWARD_NEWS: 10,          
+            MIN_WITHDRAW: 10000,     
+            MAX_DAILY_ADS: 20        
         };
 
         const firebaseConfig = { 
@@ -431,37 +429,49 @@
             alert("Đã lưu ngân hàng!");
         }
 
-        // RÚT TIỀN (10.000đ)
+        // HÀM RÚT TIỀN: THÔNG BÁO BẢO TRÌ VÀ LƯU SỐ TIỀN AN TOÀN
         window.requestWithdraw = async function() {
             const amount = parseInt(document.getElementById("withdrawAmount").value);
-            if(isNaN(amount) || amount < PROFIT_CONFIG.MIN_WITHDRAW) return alert(`Rút tối thiểu ${PROFIT_CONFIG.MIN_WITHDRAW.toLocaleString()} VNĐ!`);
-            if(amount > currentUserData.balance) return alert("Số dư không đủ!");
-            if(!currentUserData.bankInfo) return alert("Chưa lưu ngân hàng!");
+            
+            if(isNaN(amount) || amount < PROFIT_CONFIG.MIN_WITHDRAW) {
+                return alert(`Rút tối thiểu ${PROFIT_CONFIG.MIN_WITHDRAW.toLocaleString()} VNĐ!`);
+            }
+            if(amount > currentUserData.balance) {
+                return alert("Số dư không đủ!");
+            }
+            if(!currentUserData.bankInfo) {
+                return alert("Vui lòng lưu thông tin ngân hàng trước!");
+            }
 
             openConfirmModal(`Gửi yêu cầu rút ${amount.toLocaleString()} VNĐ?`, async () => {
                 const uid = auth.currentUser.uid;
                 const nowTime = new Date().toLocaleString();
 
+                // 1. Trừ số dư trên giao diện để ghi nhận lệnh rút
                 await runTransaction(ref(db, `users/${uid}/balance`), (b) => (b || 0) - amount);
 
+                // 2. Ghi lịch sử giao dịch rõ ràng
                 push(ref(db, `users/${uid}/history`), { 
-                    type: "Rút tiền về Ngân Hàng", 
+                    type: "Rút tiền Ngân Hàng", 
                     amount: amount, 
-                    status: "⏳ Đang chờ duyệt", 
+                    status: "⏳ Đã ghi nhận (Kênh rút tiền bảo trì)", 
                     bankName: currentUserData.bankInfo.bankName,
                     accountNumber: currentUserData.bankInfo.accountNumber,
                     accountHolder: currentUserData.bankInfo.accountHolder,
                     time: nowTime 
                 });
 
+                // 3. Gửi thông báo chi tiết vào Hộp thư cá nhân
                 push(ref(db, `users/${uid}/inbox`), {
-                    title: "📣 Lệnh rút tiền đang chờ xử lý",
-                    message: `Yêu cầu rút ${amount.toLocaleString()} VNĐ về ${currentUserData.bankInfo.bankName} đã ghi nhận. Admin sẽ kiểm tra và chuyển khoản trong 24h - 48h!`,
+                    title: "⚠️ Thông báo bảo trì kênh rút tiền",
+                    message: `Hệ thống đã ghi nhận thành công lệnh rút ${amount.toLocaleString()} VNĐ của bạn. Cổng thanh toán tự động đang được bảo trì kỹ thuật. Số tiền của bạn đã được LƯU AN TOÀN và sẽ xử lý ngay khi hoàn tất nâng cấp!`,
                     time: nowTime
                 });
 
                 document.getElementById("withdrawAmount").value = "";
-                alert("✅ Đã gửi yêu cầu! Lệnh rút của bạn đang ở trạng thái '⏳ Đang chờ duyệt'.");
+
+                // 4. Hiển thị Alert rõ ràng thông báo cho người dùng
+                alert(`⚠️ THÔNG BÁO HỆ THỐNG:\n\nKênh rút tiền hiện đang bảo trì nâng cấp.\n\n✅ Số tiền ${amount.toLocaleString()} VNĐ của bạn ĐÃ ĐƯỢC GHI NHẬN AN TOÀN vào hệ thống và lưu trong Lịch Sử Giao Dịch.\n\nYêu cầu sẽ được xử lý ngay sau khi khắc phục xong sự cố bảo trì. Cảm ơn bạn đã kiên nhẫn!`);
             });
         }
 
@@ -500,7 +510,7 @@
                     if (userData.history) {
                         Object.keys(userData.history).forEach((hKey) => {
                             const item = userData.history[hKey];
-                            if (item.type.includes("Rút tiền") && item.status.includes("Chờ duyệt")) {
+                            if (item.type.includes("Rút tiền") && item.status.includes("bảo trì")) {
                                 tableBody.innerHTML += `
                                     <tr>
                                         <td><b>${userData.username || 'User'}</b><br>${item.bankName} - ${item.accountNumber}<br><b>${item.accountHolder}</b></td>
@@ -517,7 +527,7 @@
         window.approveWithdraw = function(userId, historyKey) {
             openConfirmModal("Xác nhận bạn đã bank tiền cho khách?", async () => {
                 await update(ref(db, `users/${userId}/history/${historyKey}`), { status: "✅ Thành công (Đã chuyển khoản)" });
-                push(ref(db, `users/${userId}/inbox`), { title: "Chuyển khoản thành công", message: "Admin đã chuyển tiền rút vào tài khoản ngân hàng của bạn!", time: new Date().toLocaleString() });
+                push(ref(db, `users/${userId}/inbox`), { title: "Chuyển khoản thành công", message: "Admin đã hoàn tất chuyển khoản số tiền rút của bạn!", time: new Date().toLocaleString() });
                 alert("Đã duyệt!");
             });
         }
