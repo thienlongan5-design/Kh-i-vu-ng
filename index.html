@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Kiếm Tiền Pro - Version 2026</title>
+    <title>App Kiếm Tiền Pro - Version 2026 Tối Ưu</title>
 
     <!-- MÃ 1: POPUNDER ADSTERRA (CHẠY NGẦM TOÀN TRANG) -->
     <script src="https://pl30841570.effectivecpmnetwork.com/be/b0/8b/beb08be9a75245ef134558730d851eab.js"></script>
@@ -43,7 +43,7 @@
         <p>Hệ thống đang được nâng cấp bảo mật. Vui lòng quay lại sau!</p>
     </div>
 
-    <!-- MH ĐĂNG NHẬP -->
+    <!-- MÀN HÌNH ĐĂNG NHẬP -->
     <div id="loginScreen" class="container" style="margin-top: 50px;">
         <h2>Đăng Nhập Hệ Thống</h2>
         <div class="card">
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <!-- MH CHÍNH -->
+    <!-- MÀN HÌNH CHÍNH -->
     <div id="mainApp" class="hidden">
         <div class="container" style="padding-bottom: 0px;">
             <div class="top-bar">
@@ -99,14 +99,14 @@
                 <button id="btnGetSpinAd" onclick="watchAdForSpin()" class="btn-success hidden" style="margin-top: 5px;">📺 Xem QC nhận +1 lượt quay</button>
             </div>
 
-            <!-- NÚT XEM QUẢNG CÁO KIẾM TIỀN -->
+            <!-- NÚT XEM QUẢNG CÁO KIẾM TIỀN (20 VNĐ) -->
             <div class="card">
                 <h3>Xem Quảng Cáo Thường</h3>
-                <button id="btnWatchAd" class="btn-warning">📺 Xem QC Nhận 10 VNĐ</button>
+                <button id="btnWatchAd" class="btn-warning">📺 Xem QC Nhận 20 VNĐ</button>
                 <div id="adStatus" style="margin-top:10px; color:#10b981; font-size:13px; text-align:center; font-weight:bold;"></div>
             </div>
 
-            <!-- RÚT TIỀN -->
+            <!-- RÚT TIỀN (ĐÃ HẠ MỐC XUỐNG 10.000 VNĐ) -->
             <div class="card">
                 <h3>Rút Tiền & Ngân Hàng</h3>
                 <input type="text" id="bankName" placeholder="Tên Ngân Hàng (MB, VCB...)">
@@ -114,7 +114,7 @@
                 <input type="text" id="bankHolder" placeholder="Tên chủ thẻ (VIẾT HOA)">
                 <button onclick="saveBankInfo()" class="btn-success">💾 Lưu Thông Tin</button>
                 <hr style="border-color:var(--border-color); margin:15px 0;">
-                <input type="number" id="withdrawAmount" placeholder="Số tiền rút (Tối thiểu 50.000đ)">
+                <input type="number" id="withdrawAmount" placeholder="Số tiền rút (Tối thiểu 10.000đ)">
                 <button onclick="requestWithdraw()" class="btn-warning">💸 Gửi Yêu Cầu Rút Money</button>
             </div>
 
@@ -163,7 +163,7 @@
         <div id="tabTasks" class="container tab-content hidden">
             <h2>🔍 Nhiệm Vụ SEO & Đọc Báo</h2>
             <div class="card">
-                <h3>Nhiệm Vụ SEO YeuMoney (+100đ)</h3>
+                <h3>Nhiệm Vụ SEO YeuMoney (+250đ)</h3>
                 <p style="font-size: 12px; color: #cbd5e1;">Bấm link bên dưới để vượt link lấy mã xác nhận:</p>
                 
                 <!-- LINK YEUMONEY THẬT CỦA BẠN -->
@@ -172,12 +172,12 @@
                 </a>
                 
                 <input type="text" id="seoCodeInput" placeholder="Dán mã lấy được vào đây...">
-                <button onclick="submitSeoTask()" class="btn-success">Xác Nhận Nhận 100đ</button>
+                <button onclick="submitSeoTask()" class="btn-success">Xác Nhận Nhận 250đ</button>
             </div>
             <div class="card">
                 <h3>📖 Đọc Tin Tức</h3>
                 <p style="font-size: 12px;">Đọc bài viết 15s tích lũy điểm thưởng.</p>
-                <button id="btnReadNews" onclick="startReadingNews()" class="btn-warning">📖 Đọc bài (15s) nhận 5đ</button>
+                <button id="btnReadNews" onclick="startReadingNews()" class="btn-warning">📖 Đọc bài (15s) nhận 10đ</button>
             </div>
         </div>
 
@@ -235,12 +235,13 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
         import { getDatabase, ref, get, set, update, push, onValue, runTransaction, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 
+        // CẤU HÌNH KINH TẾ MỚI TỐI ƯU CẢ USER LẪN ADMIN
         const PROFIT_CONFIG = {
-            REWARD_AD: 10,           
-            REWARD_SEO: 100,         
-            REWARD_NEWS: 5,          
-            MIN_WITHDRAW: 50000,     
-            MAX_DAILY_ADS: 15        
+            REWARD_AD: 20,           // Xem QC nhận 20 VNĐ
+            REWARD_SEO: 250,         // Vượt link SEO nhận 250 VNĐ (Kích thích mạnh)
+            REWARD_NEWS: 10,          // Đọc báo nhận 10 VNĐ
+            MIN_WITHDRAW: 10000,     // Rút tiền tối thiểu chỉ 10.000 VNĐ
+            MAX_DAILY_ADS: 20        // Giới hạn 20 QC/ngày
         };
 
         const firebaseConfig = { 
@@ -324,7 +325,7 @@
             alert("Đã sao chép mã!");
         }
 
-        // XỬ LÝ NHIỆM VỤ SEO YEUMONEY
+        // XỬ LÝ NHIỆM VỤ SEO YEUMONEY (250 VNĐ)
         window.submitSeoTask = async function() {
             const code = document.getElementById("seoCodeInput").value.trim();
             if (code.length < 3) return alert("Mã không hợp lệ hoặc quá ngắn!");
@@ -337,10 +338,11 @@
                 status: "Thành công", 
                 time: new Date().toLocaleString() 
             });
-            alert("✅ Hoàn thành nhiệm vụ SEO! Bạn nhận được +100 VNĐ.");
+            alert("✅ Hoàn thành nhiệm vụ SEO! Bạn nhận được +250 VNĐ.");
             document.getElementById("seoCodeInput").value = "";
         }
 
+        // XEM QUẢNG CÁO
         document.getElementById("btnWatchAd").addEventListener("click", () => {
             if (isWatchingAd) return;
             const today = new Date().toISOString().slice(0, 10);
@@ -376,6 +378,7 @@
             }, 1000);
         });
 
+        // ĐIỂM DANH
         window.dailyCheckIn = async function() {
             const today = new Date().toISOString().slice(0, 10);
             if (currentUserData.lastCheckin === today) return alert("Hôm nay bạn đã điểm danh rồi!");
@@ -386,6 +389,7 @@
             alert("Điểm danh thành công +50 VNĐ!");
         }
 
+        // VÒNG QUAY MAY MẮN
         let currentDegree = 0;
         window.spinWheel = async function() {
             const today = new Date().toISOString().slice(0, 10);
@@ -404,7 +408,7 @@
             currentDegree += 1440 + Math.floor(Math.random() * 360);
             document.getElementById("wheelContainer").style.transform = `rotate(${currentDegree}deg)`;
 
-            const prizes = [5, 10, 15, 20, 0, 10];
+            const prizes = [10, 20, 30, 50, 0, 20];
             const prizeIndex = Math.floor((360 - (currentDegree % 360)) / 60) % 6;
             const rewardMoney = prizes[prizeIndex];
 
@@ -417,6 +421,7 @@
             }, 3000);
         }
 
+        // LƯU NGÂN HÀNG
         window.saveBankInfo = async function() {
             const bankName = document.getElementById("bankName").value.trim();
             const accountNumber = document.getElementById("bankNumber").value.trim();
@@ -426,6 +431,7 @@
             alert("Đã lưu ngân hàng!");
         }
 
+        // RÚT TIỀN (10.000đ)
         window.requestWithdraw = async function() {
             const amount = parseInt(document.getElementById("withdrawAmount").value);
             if(isNaN(amount) || amount < PROFIT_CONFIG.MIN_WITHDRAW) return alert(`Rút tối thiểu ${PROFIT_CONFIG.MIN_WITHDRAW.toLocaleString()} VNĐ!`);
